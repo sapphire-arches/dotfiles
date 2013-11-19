@@ -1,5 +1,5 @@
 wd=$(pwd)
-ln -s $HOME/.vimrc    $wd/vimrc
-ln -s $HOME/.vim      $wd/vim
-ln -s $HOME/.mostrc   $wd/mostrc
-ln -s $HOME/.xmonad   $wd/xmonad
+ln -s $wd/vimrc     $HOME/.vimrc
+ln -s $wd/vim       $HOME/.vim
+ln -s $wd/mostrc    $HOME/.mostrc
+ln -s $wd/xmonad    $HOME/.xmonad
