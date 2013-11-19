@@ -10,9 +10,10 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
                                   , "-f","AC0/online"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10
+                    , Run Com "/home/bob_twinkles/.xmonad/volume.sh" [] "volume" 30
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%cpu%<fc=#9ca1a1>|</fc>%memory%<fc=#9ca1a1>|</fc><fc=#cb4b16>%date%</fc><fc=#9ca1a1>|</fc>%battery%"
+       , template = "%StdinReader%}{%volume% %cpu%<fc=#9ca1a1>|</fc>%memory%<fc=#9ca1a1>|</fc><fc=#cb4b16>%date%</fc><fc=#9ca1a1>|</fc>%battery%"
        }

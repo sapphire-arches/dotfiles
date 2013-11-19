@@ -34,10 +34,9 @@ myManageHook = composeAll
     , title =? "testing"            --> doFloat
     , title =? "Defend Rome"        --> doFullFloat
     , title =? "Team Fortress 2 - OpenGL" --> doFullFloat
+    , title =? "Nightly"            --> doShift "3"
     , className =? "orage"          --> doFloat
---    , className =? "Steam"          --> doFloat
     , className =? "Steam"          --> doShift "9"
-    , className =? "Skype"          --> doFloat
     , className =? "Skype"          --> doShift "8"
     , className =? "sun-awt-X11-XFramePeer" --> doIgnore
     , isFullscreen                  --> doFullFloat
@@ -50,10 +49,11 @@ myLayoutHook = noBorders $ avoidStrutsOn [D] $ (Full ||| simplestFloat ||| tiled
                delta = 3/100
                ratio = 1/2
 
+
 main = do 
     xmproc <- Main.xmobar 0 ".xmonad/xmobarrc"
     xmonad $ ewmh defaultConfig
-        { terminal      = "urxvt" --"xterm -fg lightgrey -bg black"
+        { terminal      = "terminator"
         , manageHook = myManageHook <+> manageHook defaultConfig
         , layoutHook = myLayoutHook 
         , startupHook = ewmhDesktopsStartup >> setWMName "LG3D"
@@ -64,7 +64,7 @@ main = do
                         , ppCurrent = wrap "[" "]" . xmobarColor "#dc322f" "" 
                         , ppHiddenNoWindows = xmobarColor "#93a1a1" ""
                         }
-        , borderWidth = 1
+        , borderWidth = 2
         , normalBorderColor  = "#268bd2"
         , focusedBorderColor = "#dc322f"
         } `additionalKeys`

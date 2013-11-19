@@ -1,5 +1,5 @@
 function MyTabLine()
-    let s = ''
+    let s = '   |'
     for i in range(tabpagenr('$'))
         " Select highighting.
         if i + 1 == tabpagenr()
@@ -13,6 +13,7 @@ function MyTabLine()
 
         " The label is made by MyTabLabel()
         let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+        let s .= '%#TabLineFill#|'
     endfor
 
     let s .= '%#TabLineFill#%T'
@@ -47,22 +48,40 @@ set showtabline=2
 set laststatus=2
 
 syntax on
-"Switch colorscheme based on which terminal is running.
-if $TERM == 'rxvt-unicode-256color'
-    colors solarized
-endif
-if $TERM == 'rxvt-unicode'
-   colors solarized
-endif 
+""Switch colorscheme based on which terminal is running.
+"if $TERM == 'rxvt-unicode-256color'
+"    colors solarized
+"endif
+"if $TERM == 'rxvt-unicode'
+"   colors solarized
+"endif 
+set background=dark
+colors distinguished
+set fillchars+=vert:\ 
 
 set tabstop=4
 set shiftwidth=4
 set expandtab
-"set nu
+set number
 set relativenumber
+set cursorline
 au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl set syntax=glsl 
 filetype plugin indent on
 "set smartindent
 au BufNewFile,BufRead *.c,*.cpp,*.h,*.hpp let g:clang_close_preview=1
-set spell
+set nospell
 set nowrap
+"Turn off highlighting
+nnoremap  <F3>     :noh<CR>
+"Make latex-suite use latex highlighting
+let g:tex_flavor='latex'
+
+"YCM config
+let g:ycm_extra_conf_globlist = ['~/Code/CnCPP/*', '~/Code/hydra/*']
+"Disable annoying preview buffer
+set completeopt-=preview
+
+"We want to fold things syntax style
+set foldmethod=syntax
+"We don't want things to be autofolded
+set foldlevelstart=99

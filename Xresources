@@ -81,8 +81,12 @@
 *color7:                S_base2
 *color15:               S_base3
 
-URxvt*scrollBar:        false
-URxvt*ScrollBar_right:  true
+rxvt*.depth:           32
+rxvt*.transparent:     true
+rxvt*.background:      [1000]#fdf6e3
+rxvt*scrollBar:        false
+rxvt*ScrollBar_right:  true
 Xftantialias:           true
 Xft*hinting:            full
-URxvt*font:             xft:Fixed:pixelsize=10
+rxvt*font:             xft:LiberationMono:pixelsize=12
+rxvt*boldFont:         xft:LiberationMono:pixelsize=12
