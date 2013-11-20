@@ -1,7 +1,7 @@
 My dotfiles
 currently includes:
 
-- `.vim
+- `.vim`
 - `.vimrc`
 - `.xmonad`
 - `.xsession`
