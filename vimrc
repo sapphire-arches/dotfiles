@@ -81,7 +81,10 @@ let g:ycm_extra_conf_globlist = ['~/Code/CnCPP/*', '~/Code/hydra/*']
 "Disable annoying preview buffer
 set completeopt-=preview
 
-"We want to fold things syntax style
-set foldmethod=syntax
+"We want to fold things syntax style for c files
+au BufNewFile,BufRead *.c *.h *.cpp *.hpp *.cc set foldmethod=syntax
 "We don't want things to be autofolded
 set foldlevelstart=99
+"We also want to save folds when files close
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent loadview
