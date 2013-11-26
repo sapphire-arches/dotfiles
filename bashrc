@@ -39,8 +39,9 @@ external_monitor_setup() {
 alias ls='ls -h --color=auto'
 alias q='exit'
 alias sinktheship='sudo shutdown -h 0'
-alias minecraft=~/Desktop/tekkit
+alias dmake='CC=clang CFLAGS=-g make'
 alias l=ls
+
 
 export _JAVA_AWT_WM_NONREPARENTING=1
 export PYTHONPATH='/home/bob_twinkles/Code/python/thebigdb/thebigdb-python/'
