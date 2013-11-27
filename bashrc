@@ -51,6 +51,25 @@ export PATH="$PATH:/home/bob_twinkles/Scripts"
 PATH="/usr/local/heroku/bin:$PATH"
 export EDITOR='vim'
 
+function orun_prompt_modify() {
+    export PS1="(orun)$PS1"
+}
+
+function test_is_orun() {
+    if [ -n $IS_ORUN ]; then
+        orun_prompt_modify
+        return
+    fi
+    for i in $(ps a | awk '{print $1 " " $5}' | grep optirun | awk '{print $1}')
+    do
+        if [ $i = $PPID ]; then
+            orun_prompt_modify
+            export IS_ORUN="true"
+            break
+        fi
+    done
+}
+
 function prompt {
     export txtblk='\[\e[0;30m\]' # Black - Regular
     export txtred='\[\e[0;31m\]' # Red
@@ -86,6 +105,8 @@ function prompt {
     export bakwht='\[\e[47m\]'   # White
     export txtrst='\[\e[0m\]'    # Text Reset
     export PS1="[${txtcyn}\j${txtrst}][${txtgrn}\u${txtrst}@${txtred}\h${txtrst} \w]\$ "
+
+    test_is_orun
 }
 prompt
 
