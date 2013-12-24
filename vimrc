@@ -58,6 +58,8 @@ syntax on
 set background=dark
 colors distinguished
 set fillchars+=vert:\ 
+"set encoding
+set encoding=utf-8
 
 set tabstop=4
 set shiftwidth=4
@@ -88,3 +90,8 @@ set foldlevelstart=99
 "We also want to save folds when files close
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
+"Show when a column slops over
+call matchadd('ColorColumn', '\%121v', 100)
+"Show trailing spaces
+set list
+exec "set listchars=trail:\uF8"
