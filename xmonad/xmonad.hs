@@ -7,11 +7,15 @@ import XMonad.Hooks.SetWMName
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
+import XMonad.Util.Loggers
+-- import XMoand.Util.NamedWindows (getName)
 import XMonad.Layout.Grid
 import XMonad.Layout.NoBorders
 import XMonad.Layout.SimplestFloat
 import System.IO
 import Data.List
+import Data.Traversable (traverse)
+import qualified XMonad.StackSet as W
 
 xmobar screen config = spawnPipe . intercalate " " $ options
     where options = [ "xmobar"
@@ -24,9 +28,9 @@ myManageHook = composeAll
     [ title =? "Fireworks"          --> doFloat
     , title =? "Isomtric Renderer"  --> doFloat
     , title =? "Horse Race"         --> doFloat
-    , title =? "Minecraft"          --> doFloat
-    , title =? "Minecraft Launcher" --> doFloat
-    , title =? "Tekkit"             --> doFloat
+    --, title =? "Minecraft"          --> doFloat
+    --, title =? "Minecraft Launcher" --> doFloat
+    --, title =? "Tekkit"             --> doFloat
     , title =? "Krafty Kat"         --> doFloat
     , title =? "W.o.T. Client"      --> doFloat
     , title =? "Phys Canvas"        --> doFloat
@@ -49,6 +53,8 @@ myLayoutHook = noBorders $ avoidStrutsOn [D] $ (Full ||| simplestFloat ||| tiled
                delta = 3/100
                ratio = 1/2
 
+--myTitleLogger :: X (Maybe String)
+--myTitleLogger = withWindowSet $ traverse (fmap show . getName) . (take 20 W.peek)
 
 main = do 
     xmproc <- Main.xmobar 0 ".xmonad/xmobarrc"
@@ -63,6 +69,7 @@ main = do
                         , ppHidden = xmobarColor "#b58900" ""
                         , ppCurrent = wrap "[" "]" . xmobarColor "#dc322f" "" 
                         , ppHiddenNoWindows = xmobarColor "#93a1a1" ""
+--                        , ppExtras = [logTitle]
                         }
         , borderWidth = 2
         , normalBorderColor  = "#268bd2"
