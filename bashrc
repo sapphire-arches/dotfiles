@@ -56,11 +56,13 @@ function orun_prompt_modify() {
 }
 
 function test_is_orun() {
-    if [ -n $IS_ORUN ]; then
-        orun_prompt_modify
-        return
+    if [ $IS_ORUN ]; then
+        if [ $IS_ORUN = "true" ]; then
+            orun_prompt_modify
+            return
+        fi
     fi
-    for i in $(ps a | awk '{print $1 " " $5}' | grep optirun | awk '{print $1}')
+    for i in $(pgrep optirun)
     do
         if [ $i = $PPID ]; then
             orun_prompt_modify
