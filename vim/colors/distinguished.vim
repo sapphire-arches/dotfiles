@@ -50,13 +50,14 @@ call s:ColorDictParser({
 	\ , 'Folded'                      : [    249,    234,               '',      'b2b2b2',  '1c1c1c',               '']
 	\ , 'FoldColumn'                  : [    243,    234,               '',      '767676',  '1c1c1c',               '']
 	\ , 'SignColumn'                  : [    231,    233,           'bold',      'ffffff',  '121212',           'bold']
-	\ , 'ColorColumn'                 : [      '',   233,               '',            '',  '262626',               '']
+	\ , 'ColorColumn'                 : [      '',   166,               '',            '',  '262626',               '']
 	\
 	\ , 'StatusLine'                  : [    231,    239,           'bold',      'ffffff',  '303030',           'bold']
 	\ , 'StatusLineNC'                : [    244,    235,               '',      '808080',  '080808',               '']
 	\
 	\ , 'LineNr'                      : [    243,    235,               '',      '767676',  '262626',               '']
 	\ , 'VertSplit'                   : [    240,    235,               '',      '585858',  '1c1c1c',               '']
+	\
 	\
 	\ , 'WildMenu'                    : [    234,    231,               '',      '1c1c1c',  'ffffff',               '']
 	\ , 'Directory'                   : [    143,     '',           'bold',      'afaf5f',        '',           'bold']
