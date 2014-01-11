@@ -31,6 +31,7 @@ myManageHook = composeAll
     --, title =? "Minecraft"          --> doFloat
     --, title =? "Minecraft Launcher" --> doFloat
     --, title =? "Tekkit"             --> doFloat
+    , title =? "tile"               --> doFloat
     , title =? "Krafty Kat"         --> doFloat
     , title =? "W.o.T. Client"      --> doFloat
     , title =? "Phys Canvas"        --> doFloat

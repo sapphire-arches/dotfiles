@@ -1,5 +1,5 @@
 function MyTabLine()
-    let s = '   |'
+    let s = 'b(o.o)b|'
     for i in range(tabpagenr('$'))
         " Select highighting.
         if i + 1 == tabpagenr()
