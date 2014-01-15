@@ -5,6 +5,9 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+#######################################
+#       CONVIENIENCE FUNCTIONS        #
+#######################################
 prefix() {
     export WINEPREFIX="$HOME/.local/share/wineprefixes/$1"
     export WINEDEBUG=-all
@@ -36,20 +39,47 @@ external_monitor_setup() {
     xrandr --output VGA1 --mode 1680x1050_60.00 --right-of LVDS1
 }
 
+#######################################
+#         RANDOM ALIASES              #
+#######################################
 alias ls='ls -h --color=auto'
 alias q='exit'
 alias sinktheship='sudo shutdown -h 0'
 alias dmake='CC=clang CFLAGS=-g make'
 alias l=ls
+alias bc='bc -l'
 
-
-export _JAVA_AWT_WM_NONREPARENTING=1
-export PYTHONPATH='/home/bob_twinkles/Code/python/thebigdb/thebigdb-python/'
-
-#source /usr/share/git/completion/git-completion.bash
-export PATH="$PATH:/home/bob_twinkles/Scripts"
-PATH="/usr/local/heroku/bin:$PATH"
+#######################################
+#           PREFERENCES               #
+#######################################
+export MANPAGER=most
 export EDITOR='vim'
+
+# Fix Java/XMonad being derpy as hell
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+#######################################
+#            PATH MODS                #
+#######################################
+
+export PYTHONPATH='/home/bob_twinkles/Code/python/thebigdb/thebigdb-python/'
+export PATH="$PATH:/home/bob_twinkles/Scripts"
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# The probability of this causing bad behavior is pretty low
+if [ $TERM = 'xterm' ]; then
+    export TERM='xterm-256color'
+fi
+
+# If we have zsh, use that instead
+if [ -e /bin/zsh ]
+then
+    exec zsh
+fi
+
+#######################################
+#          PROMPT STUFF               #
+#######################################
 
 function orun_prompt_modify() {
     export PS1="(orun)$PS1"
@@ -132,9 +162,3 @@ if [ $TERM = linux ]; then
     echo -en "\e]PFFFFFFF" #white
 #    clear #for background artifacting
 fi
-
-if [ $TERM = 'xterm' ]; then
-    export TERM='xterm-256color'
-fi
-
-export MANPAGER=most
