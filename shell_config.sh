@@ -1,4 +1,3 @@
-#!/bin/bash
 #######################################
 #       CONVIENIENCE FUNCTIONS        #
 #######################################
@@ -84,10 +83,4 @@ export PATH="/usr/local/heroku/bin:$PATH"
 # The probability of this causing bad behavior is pretty low
 if [ $TERM = 'xterm' ]; then
     export TERM='xterm-256color'
-fi
-
-# If we have zsh, use that instead
-if [ -e /bin/zsh ]
-then
-    exec zsh
 fi
