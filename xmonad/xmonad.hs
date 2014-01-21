@@ -66,24 +66,14 @@ myManageHook = composeAll
 bspSplit :: Int -> Int -> Rectangle -> [Rectangle]
 bspSplit c n rec
     | c == n - 1 = [rec]
-    | side == 0 = let
-                    split = splitHorizontally 2 rec
-                  in
-                    (split !! 0) : ( bspSplit (c + 1) n (split !! 1) )
-    | side == 1 = let 
-                    split = splitVertically 2 rec
-                  in
-                    (split !! 0) : ( bspSplit (c + 1) n (split !! 1) )
-    | side == 2 = let
-                    split = splitHorizontally 2 rec
-                  in
-                    (split !! 1) : ( bspSplit (c + 1) n (split !! 0) )
-    | side == 3 = let 
-                    split = splitVertically 2 rec
-                  in
-                    (split !! 1) : ( bspSplit (c + 1) n (split !! 0) )
+    | side == 0 = (hsplit !! 0) : ( bspSplit (c + 1) n (hsplit !! 1) )
+    | side == 1 = (vsplit !! 0) : ( bspSplit (c + 1) n (vsplit !! 1) )
+    | side == 2 = (hsplit !! 1) : ( bspSplit (c + 1) n (hsplit !! 0) )
+    | side == 3 = (vsplit !! 1) : ( bspSplit (c + 1) n (vsplit !! 0) )
     where
       side = rem c 4
+      vsplit = splitVertically 2 rec
+      hsplit = splitHorizontally 2 rec
 
 data BinarySplit a = BinarySplit deriving ( Read, Show )
 instance LayoutClass BinarySplit a where
