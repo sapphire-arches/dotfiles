@@ -63,17 +63,16 @@ myManageHook = composeAll
 
 -- Takes the current index, total number of rectangles, and the current
 -- rectangle. Returns a list of rectangles
+-- Thanks to sjdrodge for his help with making a less derpy implementation
 bspSplit :: Int -> Int -> Rectangle -> [Rectangle]
 bspSplit c n rec
     | c == n - 1 = [rec]
-    | side == 0 = (hsplit !! 0) : ( bspSplit (c + 1) n (hsplit !! 1) )
-    | side == 1 = (vsplit !! 0) : ( bspSplit (c + 1) n (vsplit !! 1) )
-    | side == 2 = (hsplit !! 1) : ( bspSplit (c + 1) n (hsplit !! 0) )
-    | side == 3 = (vsplit !! 1) : ( bspSplit (c + 1) n (vsplit !! 0) )
-    where
-      side = rem c 4
-      vsplit = splitVertically 2 rec
-      hsplit = splitHorizontally 2 rec
+    | side <  2  = x : next y
+    | otherwise  = y : next x
+        where
+         side = c `rem` 4
+         next = bspSplit (c + 1) n
+         (x:y:ys) = (if even side then splitHorizontally else splitVertically) 2 rec
 
 data BinarySplit a = BinarySplit deriving ( Read, Show )
 instance LayoutClass BinarySplit a where
