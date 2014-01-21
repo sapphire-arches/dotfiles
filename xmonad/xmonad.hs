@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
 import XMonad
 import XMonad.Core
 import XMonad.Hooks.EwmhDesktops
@@ -56,8 +57,43 @@ myManageHook = composeAll
     , manageDocks
     ]
 
--- Custom layout stuff
-myLayoutHook = noBorders $ avoidStrutsOn [D] $ (Simplest ||| Full ||| simplestFloat ||| tiled ||| Mirror tiled ||| OneBig (3/4) (3/4)) where
+-------------------------------------------------------------------------------
+------------------------Custom layout class------------------------------------
+-------------------------------------------------------------------------------
+
+-- Takes the current index, total number of rectangles, and the current
+-- rectangle. Returns a list of rectangles
+bspSplit :: Int -> Int -> Rectangle -> [Rectangle]
+bspSplit c n rec
+    | c == n - 1 = [rec]
+    | side == 0 = let
+                    split = splitHorizontally 2 rec
+                  in
+                    (split !! 0) : ( bspSplit (c + 1) n (split !! 1) )
+    | side == 1 = let 
+                    split = splitVertically 2 rec
+                  in
+                    (split !! 0) : ( bspSplit (c + 1) n (split !! 1) )
+    | side == 2 = let
+                    split = splitHorizontally 2 rec
+                  in
+                    (split !! 1) : ( bspSplit (c + 1) n (split !! 0) )
+    | side == 3 = let 
+                    split = splitVertically 2 rec
+                  in
+                    (split !! 1) : ( bspSplit (c + 1) n (split !! 0) )
+    where
+      side = rem c 4
+
+data BinarySplit a = BinarySplit deriving ( Read, Show )
+instance LayoutClass BinarySplit a where
+    pureLayout (BinarySplit) rectangle stack = zip windows rectangles
+     where
+        windows = W.integrate stack
+        numWindows = length windows
+        rectangles = bspSplit 0 numWindows rectangle
+
+myLayoutHook = noBorders $ avoidStrutsOn [D] $ (BinarySplit ||| Full ||| simplestFloat ||| tiled ||| Mirror tiled ||| OneBig (3/4) (3/4)) where
                tiled = Tall nmaster delta ratio
                nmaster = 1
                delta = 3/100
