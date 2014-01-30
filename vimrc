@@ -78,8 +78,6 @@ nnoremap  <F3>     :noh<CR>
 "Make latex-suite use latex highlighting
 let g:tex_flavor='latex'
 
-"YCM config
-let g:ycm_extra_conf_globlist = ['~/Code/CnCPP/*', '~/Code/hydra/*']
 "Disable annoying preview buffer
 set completeopt-=preview
 
