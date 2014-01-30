@@ -5,6 +5,7 @@ clang_complete-auto_select	clang_complete.txt	/*clang_complete-auto_select*
 clang_complete-auto_user_options	clang_complete.txt	/*clang_complete-auto_user_options*
 clang_complete-cc_args	clang_complete.txt	/*clang_complete-cc_args*
 clang_complete-clang_trailing_placeholder	clang_complete.txt	/*clang_complete-clang_trailing_placeholder*
+clang_complete-compilation_database	clang_complete.txt	/*clang_complete-compilation_database*
 clang_complete-compl_kinds	clang_complete.txt	/*clang_complete-compl_kinds*
 clang_complete-complete_auto	clang_complete.txt	/*clang_complete-complete_auto*
 clang_complete-complete_macros	clang_complete.txt	/*clang_complete-complete_macros*
@@ -32,6 +33,7 @@ clang_complete.txt	clang_complete.txt	/*clang_complete.txt*
 g:clang_auto_select	clang_complete.txt	/*g:clang_auto_select*
 g:clang_auto_user_options	clang_complete.txt	/*g:clang_auto_user_options*
 g:clang_close_preview	clang_complete.txt	/*g:clang_close_preview*
+g:clang_compilation_database	clang_complete.txt	/*g:clang_compilation_database*
 g:clang_complete_auto	clang_complete.txt	/*g:clang_complete_auto*
 g:clang_complete_copen	clang_complete.txt	/*g:clang_complete_copen*
 g:clang_complete_macros	clang_complete.txt	/*g:clang_complete_macros*

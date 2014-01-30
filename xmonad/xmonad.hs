@@ -64,6 +64,7 @@ myManageHook = composeAll
 -- Takes the current index, total number of rectangles, and the current
 -- rectangle. Returns a list of rectangles
 -- Thanks to sjdrodge for his help with making a less derpy implementation
+
 bspSplit :: Int -> Int -> Rectangle -> [Rectangle]
 bspSplit c n rec
     | c == n - 1 = [rec]
