@@ -125,6 +125,7 @@ main = do
     xmonad $ ewmh defaultConfig
         { terminal      = "terminator"
         , manageHook = myManageHook <+> manageHook defaultConfig
+        , handleEventHook = docksEventHook
         , layoutHook = myLayoutHook 
         , startupHook = ewmhDesktopsStartup >> setWMName "LG3D"
         , logHook = dynamicLogWithPP xmobarPP
