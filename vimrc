@@ -1,5 +1,5 @@
-function MyTabLine()
-    let s = 'b(o.o)b|'
+function! MyTabLine()
+    let s = '  |'
     for i in range(tabpagenr('$'))
         " Select highighting.
         if i + 1 == tabpagenr()
@@ -21,7 +21,7 @@ function MyTabLine()
     return s
 endfunction
 
-function MyTabLabel(n)
+function! MyTabLabel(n)
     let buflist = tabpagebuflist(a:n)
     let winnr = tabpagewinnr(a:n)
     let file = bufname(buflist[winnr - 1])
@@ -61,8 +61,8 @@ set fillchars+=vert:\
 "set encoding
 set encoding=utf-8
 
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set number
 set relativenumber
@@ -89,7 +89,7 @@ set foldlevelstart=99
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
 "Show when a column slops over
-call matchadd('ColorColumn', '\%121v', 100)
+call matchadd('ColorColumn', '\%81v', 100)
 "Show trailing spaces
 set list
-exec "set listchars=trail:\uF8"
+exec "set listchars=tab:\\|\\|,trail:\uF8"
