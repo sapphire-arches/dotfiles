@@ -67,7 +67,9 @@ set expandtab
 set number
 set relativenumber
 set cursorline
+" Help the filetype system out a bit
 au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl set syntax=glsl 
+au BufNewFile,BufRead *.bcs set syntax=bc
 filetype plugin indent on
 "set smartindent
 au BufNewFile,BufRead *.c,*.cpp,*.h,*.hpp let g:clang_close_preview=1
