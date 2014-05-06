@@ -27,6 +27,9 @@ gnome)
     exec gnome-session
     ;;
 *)
-    run_xmonad
+    exec ck-launch-session startkde
     ;;
+#*)
+#    run_xmonad
+#    ;;
 esac

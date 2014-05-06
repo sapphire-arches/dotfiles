@@ -52,6 +52,7 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 . ~/.shell_config.sh
+setopt BRACE_CCL
 
 # # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then

@@ -91,7 +91,29 @@ set foldlevelstart=99
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
 "Show when a column slops over
-call matchadd('ColorColumn', '\%81v', 100)
+if &ft != 'tex'
+  let g:cc_match_group = matchadd('ColorColumn', '\%81v', 100)
+endif
 "Show trailing spaces
 set list
 exec "set listchars=tab:\\|\\|,trail:\uF8"
+"Do special things for tex files
+function! TexSpecialEnables()
+  set spell
+  call matchdelete(g:cc_match_grounp)
+endfunction
+
+autocmd BufNewFile,BufRead *.tex call TexSpecialEnables()
+
+" open nerdtree
+function! StartNerdtree()
+  if 0 == argc()
+      NERDTree
+  end
+endfunction
+
+au VimEnter * call StartNerdtree()
+autocmd VimEnter * nmap <F3> :NERDTreeToggle<CR>
+autocmd VimEnter * imap <F3> <Esc>:NERDTreeToggle<CR>a
+let NERDTreeQuitOnOpen=1
+let NERDTreeWinSize=35

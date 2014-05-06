@@ -17,6 +17,10 @@ lsp() {
     ls $* $HOME/.local/share/wineprefixes
 }
 
+unfreeze_ff() {
+  pgrep fire | tail -n 1 | xargs kill
+}
+
 wired_connection_setup() {
     sudo ip link set eth0 up
     sudo dhcpcd eth0
