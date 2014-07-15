@@ -91,9 +91,7 @@ set foldlevelstart=99
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
 "Show when a column slops over
-if &ft != 'tex'
-  let g:cc_match_group = matchadd('ColorColumn', '\%81v', 100)
-endif
+let g:cc_match_group = matchadd('ColorColumn', '\%121v', 100)
 "Show trailing spaces
 set list
 exec "set listchars=tab:\\|\\|,trail:\uF8"
@@ -117,3 +115,6 @@ autocmd VimEnter * nmap <F3> :NERDTreeToggle<CR>
 autocmd VimEnter * imap <F3> <Esc>:NERDTreeToggle<CR>a
 let NERDTreeQuitOnOpen=1
 let NERDTreeWinSize=35
+
+" disable dumb gentoo word width stuff
+autocmd BufNewFile,BufRead * set textwidth=0
