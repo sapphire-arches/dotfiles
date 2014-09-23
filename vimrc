@@ -12,9 +12,17 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 call neobundle#end()
 
+"GitGutter - show diff status when writing
 NeoBundle 'airblade/vim-gitgutter.git'
+let g:gitgutter_sign_column_always = 1
 
-NeoBundleCheck
+" You Complete Me - autocompletion goodness!
+" We actually only want to use it if we _are not_ using neovim
+if !has('nvim')
+  NeoBundle 'Valloric/YouCompleteMe'
+
+  NeoBundleCheck
+endif
 
 " Custom tabline
 
