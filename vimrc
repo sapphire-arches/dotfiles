@@ -118,3 +118,9 @@ let NERDTreeWinSize=35
 
 " disable dumb gentoo word width stuff
 autocmd BufNewFile,BufRead * set textwidth=0
+
+" enable python support in neovim
+
+if has('nvim')
+  runtime! plugin/plugin_setup.vim
+endif
