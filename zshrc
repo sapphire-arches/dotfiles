@@ -67,3 +67,4 @@ setopt BRACE_CCL
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
+bindkey "^R" history-incremental-search-backward
