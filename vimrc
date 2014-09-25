@@ -126,7 +126,7 @@ exec "set listchars=tab:\\|\\|,trail:\uF8"
 "Do special things for tex files
 function! TexSpecialEnables()
   set spell
-  call matchdelete(g:cc_match_grounp)
+  call matchdelete(g:cc_match_group)
 endfunction
 
 autocmd BufNewFile,BufRead *.tex call TexSpecialEnables()
