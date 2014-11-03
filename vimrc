@@ -16,13 +16,7 @@ call neobundle#end()
 NeoBundle 'airblade/vim-gitgutter.git'
 let g:gitgutter_sign_column_always = 1
 
-" You Complete Me - autocompletion goodness!
-" We actually only want to use it if we _are not_ using neovim
-if !has('nvim')
-  NeoBundle 'Valloric/YouCompleteMe'
-
-  NeoBundleCheck
-endif
+NeoBundleCheck
 
 " Custom tabline
 
