@@ -61,10 +61,17 @@ myManageHook = composeAll
 ------------------------Custom layout class------------------------------------
 -------------------------------------------------------------------------------
 
--- Takes the current index, total number of rectangles, and the current
--- rectangle. Returns a list of rectangles
--- Thanks to sjdrodge for his help with making a less derpy implementation
+-- Thanks to sjdrodge for his help with making a less derpy implementation of
+-- the layout mode
 
+padRect :: Int -> Rectangle -> Rectangle
+padRect padding (Rectangle x y w h) =
+     let pp = fromIntegral padding -- position padding is a different type than
+         pd = fromIntegral padding -- width padding
+     in Rectangle ( x + pp ) ( y + pp ) ( w - ( 2 * pd ) ) ( h - ( 2 * pd ) )
+
+-- Takes the current index, total number of rectangles, and the current
+-- rectangle and a padding value. Returns a list of rectangles
 bspSplit :: Int -> Int -> Rectangle -> [Rectangle]
 bspSplit c n rec
     | c == n - 1 = [rec]
@@ -75,15 +82,21 @@ bspSplit c n rec
          next = bspSplit (c + 1) n
          (x:y:ys) = (if even side then splitHorizontally else splitVertically) 2 rec
 
-data BinarySplit a = BinarySplit deriving ( Read, Show )
+data BinarySplit a = BinarySplit { spacing      :: Int
+                                 , spacingDelta :: Int } deriving ( Read, Show )
 instance LayoutClass BinarySplit a where
-    pureLayout (BinarySplit) rectangle stack = zip windows rectangles
+    pureLayout (BinarySplit spacing spacingDelta) rectangle stack = zip windows rectangles
      where
         windows = W.integrate stack
         numWindows = length windows
-        rectangles = bspSplit 0 numWindows rectangle
+        rectangles = map ( padRect spacing ) ( bspSplit 0 numWindows rectangle )
 
-myLayoutHook = noBorders $ avoidStrutsOn [D] $ (BinarySplit ||| Full ||| simplestFloat ||| tiled ||| Mirror tiled ||| OneBig (3/4) (3/4)) where
+    pureMessage (BinarySplit spacing spacingDelta) m =
+        msum [fmap resize (fromMessage m)]
+      where resize Shrink = BinarySplit ( max 0 $ spacing - spacingDelta ) spacingDelta
+            resize Expand = BinarySplit ( spacing + spacingDelta ) spacingDelta
+
+myLayoutHook = noBorders $ avoidStrutsOn [D] $ (BinarySplit 9 3 ||| Full ||| simplestFloat ||| tiled ||| Mirror tiled ||| OneBig (3/4) (3/4)) where
                tiled = Tall nmaster delta ratio
                nmaster = 1
                delta = 3/100
