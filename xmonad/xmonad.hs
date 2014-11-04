@@ -96,7 +96,7 @@ instance LayoutClass BinarySplit a where
       where resize Shrink = BinarySplit ( max 0 $ spacing - spacingDelta ) spacingDelta
             resize Expand = BinarySplit ( spacing + spacingDelta ) spacingDelta
 
-myLayoutHook = noBorders $ avoidStrutsOn [D] $ (BinarySplit 9 3 ||| Full ||| simplestFloat ||| tiled ||| Mirror tiled ||| OneBig (3/4) (3/4)) where
+myLayoutHook = noBorders $ avoidStrutsOn [D] $ (BinarySplit 8 6 ||| Full ||| simplestFloat ||| tiled ||| Mirror tiled ||| OneBig (3/4) (3/4)) where
                tiled = Tall nmaster delta ratio
                nmaster = 1
                delta = 3/100
