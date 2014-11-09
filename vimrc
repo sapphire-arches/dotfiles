@@ -12,13 +12,25 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 call neobundle#end()
 
-"GitGutter - show diff status when writing
 NeoBundle 'airblade/vim-gitgutter.git'
-let g:gitgutter_sign_column_always = 1
-
+NeoBundle 'Rip-Rip/clang_complete.git'
+NeoBundle 'flazz/vim-colorschemes.git'
+NeoBundle 'Raimondi/delimitMate.git'
 NeoBundleCheck
 
-" Custom tabline
+"GitGutter - show diff status when writing
+let g:gitgutter_sign_column_always = 1
+
+"clang_complete - C/C++ completiong using clang
+"  Disable preview buffer, we copen'd already
+set completeopt-=preview
+"  enable completion automatically
+let g:clang_complete_auto = 1
+nmap <C-m> :call ClangUpdateQuickFix()<CR>
+au BufWrite *.c,*.h,*.cpp,*.hpp :call ClangUpdateQuickFix()
+
+"delimitMate - expand {<CR> to {<CR>}<ESC>O
+let g:delimitMate_expand_cr=1
 
 function! MyTabLine()
     let s = '  |'
@@ -78,7 +90,8 @@ syntax on
 "   colors solarized
 "endif 
 set background=dark
-colors distinguished
+colors bubblegum
+" colors distinguished
 set fillchars+=vert:\ 
 "set encoding
 set encoding=utf-8
@@ -94,16 +107,12 @@ au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl set syntax=glsl
 au BufNewFile,BufRead *.bcs set syntax=bc
 filetype plugin indent on
 "set smartindent
-au BufNewFile,BufRead *.c,*.cpp,*.h,*.hpp let g:clang_close_preview=1
 set nospell
 set nowrap
 "Turn off highlighting
 nnoremap  <F3>     :noh<CR>
 "Make latex-suite use latex highlighting
 let g:tex_flavor='latex'
-
-"Disable annoying preview buffer
-set completeopt-=preview
 
 "We want to fold things syntax style for c files
 au BufNewFile,BufRead *.c,*.h,*.cpp,*.hpp,*.cc set foldmethod=syntax
@@ -125,18 +134,18 @@ endfunction
 
 autocmd BufNewFile,BufRead *.tex call TexSpecialEnables()
 
-" open nerdtree
-function! StartNerdtree()
-  if 0 == argc()
-      NERDTree
-  end
-endfunction
-
-au VimEnter * call StartNerdtree()
-autocmd VimEnter * nmap <F3> :NERDTreeToggle<CR>
-autocmd VimEnter * imap <F3> <Esc>:NERDTreeToggle<CR>a
-let NERDTreeQuitOnOpen=1
-let NERDTreeWinSize=35
+"  " open nerdtree
+"  function! StartNerdtree()
+"    if 0 == argc()
+"        NERDTree
+"    end
+"  endfunction
+"  
+"  au VimEnter * call StartNerdtree()
+"  autocmd VimEnter * nmap <F3> :NERDTreeToggle<CR>
+"  autocmd VimEnter * imap <F3> <Esc>:NERDTreeToggle<CR>a
+"  let NERDTreeQuitOnOpen=1
+"  let NERDTreeWinSize=35
 
 " disable dumb gentoo word width stuff
 autocmd BufNewFile,BufRead * set textwidth=0
