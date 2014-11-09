@@ -83,6 +83,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export PYTHONPATH='/home/bob_twinkles/Code/python/thebigdb/thebigdb-python/'
 export PATH="$PATH:$HOME/.cabal/bin:$HOME/Scripts"
 export PATH="/usr/local/heroku/bin:$PATH"
+export PATH="$HOME/Scripts/overrides:$PATH"
 
 # The probability of this causing bad behavior is pretty low
 if [ $TERM = 'xterm' ]; then
