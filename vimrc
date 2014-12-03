@@ -16,21 +16,28 @@ NeoBundle 'airblade/vim-gitgutter.git'
 NeoBundle 'Rip-Rip/clang_complete.git'
 NeoBundle 'flazz/vim-colorschemes.git'
 NeoBundle 'Raimondi/delimitMate.git'
+NeoBundle 'scrooloose/syntastic.git'
 NeoBundleCheck
 
 "GitGutter - show diff status when writing
 let g:gitgutter_sign_column_always = 1
 
-"clang_complete - C/C++ completiong using clang
-"  Disable preview buffer, we copen'd already
-set completeopt-=preview
-"  enable completion automatically
-let g:clang_complete_auto = 1
-nmap <C-m> :call ClangUpdateQuickFix()<CR>
-au BufWrite *.c,*.h,*.cpp,*.hpp :call ClangUpdateQuickFix()
-
-"delimitMate - expand {<CR> to {<CR>}<ESC>O
-let g:delimitMate_expand_cr=1
+"setup status line
+set statusline=%t
+set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
+set statusline+=%{&ff}] "file format
+set statusline+=%h      "help file flag
+set statusline+=%m      "modified flag
+set statusline+=%r      "read only flag
+set statusline+=%y      "filetype
+set statusline+=%=      "left/right separator
+set statusline+=%c,     "cursor column
+set statusline+=%l/%L   "cursor line/total lines
+set statusline+=\ %P    "percent through file"]
+"Add syntastic status to the statusline
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
 function! MyTabLine()
     let s = '  |'
