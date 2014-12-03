@@ -121,25 +121,43 @@ nnoremap  <F3>     :noh<CR>
 "Make latex-suite use latex highlighting
 let g:tex_flavor='latex'
 
-"We want to fold things syntax style for c files
-au BufNewFile,BufRead *.c,*.h,*.cpp,*.hpp,*.cc set foldmethod=syntax
+function! FileTypeSpecialEnables()
+  if &ft == 'c' || &ft == 'cpp'
+    "clang_complete - C/C++ completiong using clang
+    "  Disable preview buffer, we copen'd already
+    " set completeopt-=preview
+    "  enable completion automatically
+    let g:clang_complete_auto = 1
+    nmap <C-m> :call ClangUpdateQuickFix()<CR>
+    au BufWrite *.c,*.h,*.cpp,*.hpp :call ClangUpdateQuickFix()
+
+    "delimitMate - expand {<CR> to {<CR>}<ESC>O
+    let g:delimitMate_expand_cr=1
+
+    " Use the same config file for syntastic and clang_complete
+    let g:syntastic_cpp_config_file='.clang_complete'
+    "We want to fold things syntax style for c files
+    set foldmethod=syntax
+  elseif &ft == 'tex'
+    "Do special things for tex files
+    set wrap
+    set spell
+    call matchdelete(g:cc_match_group)
+  endif
+endfunction
+
 "We don't want things to be autofolded
 set foldlevelstart=99
-"We also want to save folds when files close
-autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent loadview
+" "We also want to save folds when files close
+" autocmd BufWinLeave *.* mkview
+" autocmd BufWinEnter *.* silent loadview
 "Show when a column slops over
 let g:cc_match_group = matchadd('ColorColumn', '\%121v', 100)
 "Show trailing spaces
 set list
-exec "set listchars=tab:\\|\\|,trail:\uF8"
-"Do special things for tex files
-function! TexSpecialEnables()
-  set spell
-  call matchdelete(g:cc_match_group)
-endfunction
+exec "set listchars=tab:\\|\\ ,trail:\uF8"
 
-autocmd BufNewFile,BufRead *.tex call TexSpecialEnables()
+autocmd BufNewFile,BufRead * call FileTypeSpecialEnables()
 
 "  " open nerdtree
 "  function! StartNerdtree()
