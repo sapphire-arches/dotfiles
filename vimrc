@@ -109,6 +109,7 @@ set expandtab
 set number
 set relativenumber
 set cursorline
+set visualbell
 " Help the filetype system out a bit
 au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl set syntax=glsl 
 au BufNewFile,BufRead *.bcs set syntax=bc
