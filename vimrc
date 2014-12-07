@@ -17,6 +17,7 @@ NeoBundle 'Rip-Rip/clang_complete.git'
 NeoBundle 'flazz/vim-colorschemes.git'
 NeoBundle 'Raimondi/delimitMate.git'
 NeoBundle 'scrooloose/syntastic.git'
+NeoBundle 'dart-lang/dart-vim-plugin.git'
 NeoBundleCheck
 
 "GitGutter - show diff status when writing
@@ -144,6 +145,10 @@ function! FileTypeSpecialEnables()
     set wrap
     set spell
     call matchdelete(g:cc_match_group)
+  elseif &ft == 'dart'
+    " Disable syntastic autochecking for dart files because dartanalyzer is
+    " incredibly slow
+    SyntasticToggleMode
   endif
 endfunction
 
