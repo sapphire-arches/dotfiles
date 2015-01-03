@@ -18,6 +18,7 @@ NeoBundle 'flazz/vim-colorschemes.git'
 NeoBundle 'Raimondi/delimitMate.git'
 NeoBundle 'scrooloose/syntastic.git'
 NeoBundle 'dart-lang/dart-vim-plugin.git'
+NeoBundle 'derekwyatt/vim-scala.git'
 NeoBundleCheck
 
 "GitGutter - show diff status when writing
@@ -111,6 +112,7 @@ set number
 set relativenumber
 set cursorline
 set visualbell
+set hlsearch
 " Help the filetype system out a bit
 au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl set syntax=glsl 
 au BufNewFile,BufRead *.bcs set syntax=bc
@@ -123,15 +125,27 @@ nnoremap  <F3>     :noh<CR>
 "Make latex-suite use latex highlighting
 let g:tex_flavor='latex'
 
+function! CPPNew(fname)
+  let s:fname = join(split(a:fname, '\.')[:-2], '.')
+  let s:cname = s:fname . '.cpp'
+  let s:hname = s:fname . '.hpp'
+  echom s:cname
+  exe "tabnew " . fnameescape(s:cname)
+  exe "vs " . fnameescape(s:hname)
+endfunction
+
+command! -nargs=1 -complete=file CPPOpen call CPPNew("<args>")
+
 function! FileTypeSpecialEnables()
   if &ft == 'c' || &ft == 'cpp'
     "clang_complete - C/C++ completiong using clang
     "  Disable preview buffer, we copen'd already
     " set completeopt-=preview
     "  enable completion automatically
-    let g:clang_complete_auto = 1
-    nmap <C-m> :call ClangUpdateQuickFix()<CR>
-    au BufWrite *.c,*.h,*.cpp,*.hpp :call ClangUpdateQuickFix()
+    ""No longer needed because syntastic!
+    " let g:clang_complete_auto = 1
+    " nmap <C-m> :call ClangUpdateQuickFix()<CR>
+    " au BufWrite *.c,*.h,*.cpp,*.hpp :call ClangUpdateQuickFix()
 
     "delimitMate - expand {<CR> to {<CR>}<ESC>O
     let g:delimitMate_expand_cr=1
@@ -148,7 +162,11 @@ function! FileTypeSpecialEnables()
   elseif &ft == 'dart'
     " Disable syntastic autochecking for dart files because dartanalyzer is
     " incredibly slow
-    SyntasticToggleMode
+    let g:syntastic_mode_map = { "mode" : "passive" }
+  elseif &ft == 'scala'
+    " Disable syntastic autochecking for scala files because scala is
+    " incredibly slow
+    let g:syntastic_mode_map = { "mode" : "passive" }
   endif
 endfunction
 

@@ -27,13 +27,13 @@ wired_connection_setup() {
 }
 
 external_monitor_setup() {
-    if [ ! -n $2 ]
+    if [ ! -n $3 ]
     then
-        echo "Specify width and height"
+        echo "Specify display, width, and height"
     fi
-    xrandr --newmode $(gtf $1 $2 60 | grep Modeline | cut -d " " -f 4- | sed s/\"//g)
-    xrandr --addmode VGA1 "1680x1050_60.00"
-    xrandr --output VGA1 --mode 1680x1050_60.00 --right-of LVDS1
+    xrandr --newmode $(gtf $2 $3 60 | grep Modeline | cut -d " " -f 4- | sed s/\"//g)
+    xrandr --addmode $1 "1680x1050_60.00"
+    xrandr --output $1 --mode 1680x1050_60.00 --right-of LVDS1
 }
 
 #fix colors on the framebuffer terms.

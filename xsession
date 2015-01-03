@@ -8,7 +8,8 @@ function run_xmonad() {
 #    xsetroot -solid rgb:93/a1/a1
     xsetroot -solid rgb:4f/44/44
 #    xcompmgr -c &
-    exec ck-launch-session dbus-launch --sh-syntax --exit-with-session xmonad
+#    exec ck-launch-session dbus-launch --sh-syntax --exit-with-session xmonad
+    xmonad
 }
 
 run_xmonad
