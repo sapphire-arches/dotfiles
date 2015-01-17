@@ -154,6 +154,7 @@ function! CPPNew(fname)
   echom s:cname
   exe "tabnew " . fnameescape(s:cname)
   copen 3
+  wincmd k
   exe "vs " . fnameescape(s:hname)
 endfunction
 command! -nargs=1 -complete=file CPPOpen call CPPNew("<args>")
