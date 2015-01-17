@@ -27,7 +27,7 @@ NeoBundleCheck
 let g:gitgutter_sign_column_always = 1
 
 "clang_complete - C/C++ completiong using clang
-let g:clang_complete
+"let g:clang_complete
 
 "
 "setup status line
