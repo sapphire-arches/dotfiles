@@ -101,16 +101,14 @@ set showtabline=2
 set laststatus=2
 
 syntax on
-""Switch colorscheme based on which terminal is running.
-"if $TERM == 'rxvt-unicode-256color'
-"    colors solarized
-"endif
-"if $TERM == 'rxvt-unicode'
-"   colors solarized
-"endif 
-set background=dark
-colors bubblegum
+
+" colors bubblegum
+" colors rdark-terminal
 " colors distinguished
+" colors solarized
+colors gruvbox
+set background=dark
+
 set fillchars+=vert:\ 
 "set encoding
 set encoding=utf-8
