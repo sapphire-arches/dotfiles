@@ -1,4 +1,6 @@
+"
 " Neobundle config
+"
 
 if has('vim_starting')
   set nocompatible
@@ -24,7 +26,12 @@ NeoBundleCheck
 "GitGutter - show diff status when writing
 let g:gitgutter_sign_column_always = 1
 
+"clang_complete - C/C++ completiong using clang
+let g:clang_complete
+
+"
 "setup status line
+"
 set statusline=%t
 set statusline+=[%{strlen(&fenc)?&fenc:'none'}, "file encoding
 set statusline+=%{&ff}] "file format
@@ -41,6 +48,9 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
+"
+" custom tabline functions
+"
 function! MyTabLine()
     let s = '  |'
     for i in range(tabpagenr('$'))
@@ -105,14 +115,25 @@ set fillchars+=vert:\
 "set encoding
 set encoding=utf-8
 
+"
+" misc. setup
+"
+" tab stuff
 set tabstop=2
 set shiftwidth=2
 set expandtab
+" current line number and jump numbers
 set number
 set relativenumber
+" highlight background of current line
 set cursorline
+" BEEEP BEEEP BOOOOOOOP -> *blinky*
 set visualbell
+" highlight all search matches
 set hlsearch
+" display what will be tabbed through
+set wildmenu
+
 " Help the filetype system out a bit
 au BufNewFile,BufRead *.frag,*.vert,*.fp,*.vp,*.glsl set syntax=glsl 
 au BufNewFile,BufRead *.bcs set syntax=bc
@@ -125,27 +146,29 @@ nnoremap  <F3>     :noh<CR>
 "Make latex-suite use latex highlighting
 let g:tex_flavor='latex'
 
+"
+" custom command to set up an IDE-Like environment for c++
+"
 function! CPPNew(fname)
   let s:fname = join(split(a:fname, '\.')[:-2], '.')
   let s:cname = s:fname . '.cpp'
   let s:hname = s:fname . '.hpp'
   echom s:cname
   exe "tabnew " . fnameescape(s:cname)
+  copen 3
   exe "vs " . fnameescape(s:hname)
 endfunction
-
 command! -nargs=1 -complete=file CPPOpen call CPPNew("<args>")
 
+"
+" some filetypes need extra configuration done once plugins have all loaded
+"
 function! FileTypeSpecialEnables()
   if &ft == 'c' || &ft == 'cpp'
-    "clang_complete - C/C++ completiong using clang
     "  Disable preview buffer, we copen'd already
-    " set completeopt-=preview
+    set completeopt-=preview
     "  enable completion automatically
-    ""No longer needed because syntastic!
-    " let g:clang_complete_auto = 1
-    " nmap <C-m> :call ClangUpdateQuickFix()<CR>
-    " au BufWrite *.c,*.h,*.cpp,*.hpp :call ClangUpdateQuickFix()
+    let g:clang_complete_auto = 1
 
     "delimitMate - expand {<CR> to {<CR>}<ESC>O
     let g:delimitMate_expand_cr=1
@@ -182,19 +205,6 @@ set list
 exec "set listchars=tab:\\|\\ ,trail:\uF8"
 
 autocmd BufNewFile,BufRead * call FileTypeSpecialEnables()
-
-"  " open nerdtree
-"  function! StartNerdtree()
-"    if 0 == argc()
-"        NERDTree
-"    end
-"  endfunction
-"  
-"  au VimEnter * call StartNerdtree()
-"  autocmd VimEnter * nmap <F3> :NERDTreeToggle<CR>
-"  autocmd VimEnter * imap <F3> <Esc>:NERDTreeToggle<CR>a
-"  let NERDTreeQuitOnOpen=1
-"  let NERDTreeWinSize=35
 
 " disable dumb gentoo word width stuff
 autocmd BufNewFile,BufRead * set textwidth=0
