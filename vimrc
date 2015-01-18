@@ -15,7 +15,18 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 call neobundle#end()
 
 NeoBundle 'airblade/vim-gitgutter.git'
-NeoBundle 'Rip-Rip/clang_complete.git'
+NeoBundle 'Shougo/neocomplete.vim.git'
+NeoBundle 'osyo-manga/vim-marching.git'
+NeoBundle 'Shougo/vimproc.vim', {
+      \ 'build' : {
+      \     'windows' : 'tools\\update-dll-mingw',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'linux' : 'make',
+      \     'unix' : 'gmake',
+      \    },
+      \ }
+NeoBundle 'osyo-manga/vim-reunions'
 NeoBundle 'flazz/vim-colorschemes.git'
 NeoBundle 'Raimondi/delimitMate.git'
 NeoBundle 'scrooloose/syntastic.git'
@@ -26,8 +37,29 @@ NeoBundleCheck
 "GitGutter - show diff status when writing
 let g:gitgutter_sign_column_always = 1
 
-"clang_complete - C/C++ completiong using clang
-let g:clang_make_default_keymappings = 0
+"
+" NeoComplete setup
+"
+
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+
+if !exists('g:neocomplete#keyword_patterns')
+  let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
+"
+" vim-marching setup
+"
+
+let g:marching_enable_neocomplete = 1
+let g:neocomplete#sources#omni#input_patterns.cpp =
+    \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
 
 "
 "setup status line
