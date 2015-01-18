@@ -32,6 +32,7 @@ NeoBundle 'Raimondi/delimitMate.git'
 NeoBundle 'scrooloose/syntastic.git'
 NeoBundle 'dart-lang/dart-vim-plugin.git'
 NeoBundle 'derekwyatt/vim-scala.git'
+NeoBundle 'godlygeek/csapprox'
 NeoBundleCheck
 
 "GitGutter - show diff status when writing
@@ -138,11 +139,13 @@ set laststatus=2
 
 syntax on
 
-" colors bubblegum
-" colors rdark-terminal
-" colors distinguished
-" colors solarized
-colors gruvbox
+"
+" colorsheme selection
+"
+
+let g:CSApprox_loaded = 1
+let s:colorscheme_choices = split("bubblegum anotherdark-terminal rdark-terminal2 distinguished gruvbox")
+execute 'colors' s:colorscheme_choices[reltime()[1] % len(s:colorscheme_choices)]
 set background=dark
 
 set fillchars+=vert:\ 
