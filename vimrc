@@ -52,7 +52,7 @@ set statusline+=%*
 " custom tabline functions
 "
 function! MyTabLine()
-    let s = '  |'
+    let s = '|'
     for i in range(tabpagenr('$'))
         " Select highighting.
         if i + 1 == tabpagenr()
@@ -77,7 +77,11 @@ endfunction
 function! MyTabLabel(n)
     let buflist = tabpagebuflist(a:n)
     let winnr = tabpagewinnr(a:n)
-    let file = bufname(buflist[winnr - 1])
+    "systems/render/renderables/MobileTexturedRender.cpp
+    let raw_name = fnamemodify(bufname(buflist[winnr - 1]), ':.')
+    echo raw_name
+    " regex to emulate default vim tabline collapse (path/to/file -> p/t/file)
+    let file = substitute(raw_name, '\([^/]\)[^/]\+/', '\1/', 'g')
     let numBuffers = len(buflist)
     "find any modified buffers
     let mod = 0 "false
