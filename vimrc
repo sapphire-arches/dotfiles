@@ -110,7 +110,6 @@ endfunction
 function! MyTabLabel(n)
     let buflist = tabpagebuflist(a:n)
     let winnr = tabpagewinnr(a:n)
-    "systems/render/renderables/MobileTexturedRender.cpp
     let raw_name = fnamemodify(bufname(buflist[winnr - 1]), ':.')
     echo raw_name
     " regex to emulate default vim tabline collapse (path/to/file -> p/t/file)
