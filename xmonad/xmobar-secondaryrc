@@ -1,0 +1,9 @@
+Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
+       , bgColor = "#fdf6e3"
+       , fgColor = "#657b83"
+       , position = BottomW L 100
+       , lowerOnStart = True
+       , commands = [ Run StdinReader ]
+       , alignSep = "}{"
+       , template = "%StdinReader%}{Science!"
+}

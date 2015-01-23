@@ -31,6 +31,8 @@ xmobar screen config = spawnPipe . intercalate " " $ options
                      , show config
                      ]
 
+writeHandles h s = forM_ h $ flip hPutStrLn s
+
 -- Autofloat some special windows, put things in their place
 myManageHook = composeAll
     [ title =? "Fireworks"          --> doFloat
@@ -134,8 +136,11 @@ logTitles = withWindowSet $ fmap Just . (\x ->
           in fmap (formatTitles desiredLength) titles)
 
 -- And the main config
-main = do 
-    xmproc <- Main.xmobar 0 ".xmonad/xmobarrc"
+main :: IO ()
+main = do
+    xmprocs <- sequence [ Main.xmobar 0 ".xmonad/xmobarrc"
+                        , Main.xmobar 1 ".xmonad/xmobar-secondaryrc"
+                        ]
     xmonad $ ewmh defaultConfig
         { terminal      = "terminator"
         , manageHook = myManageHook <+> manageHook defaultConfig
@@ -143,7 +148,7 @@ main = do
         , layoutHook = myLayoutHook 
         , startupHook = ewmhDesktopsStartup >> setWMName "LG3D"
         , logHook = dynamicLogWithPP xmobarPP
-                        { ppOutput = hPutStrLn xmproc
+                        { ppOutput = writeHandles xmprocs
                         , ppTitle = wrap "[" "]" . xmobarColor "#859900" "" . formatTitle myTitleLength
                         , ppSep = "|"
                         , ppHidden = xmobarColor "#b58900" ""
