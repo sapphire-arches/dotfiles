@@ -153,11 +153,11 @@ syntax on
 "
 
 let g:CSApprox_loaded = 1
+set background=dark
 let s:colorscheme_choices = split("bubblegum anotherdark-terminal rdark-terminal2 distinguished gruvbox")
 let s:colorscheme_choice = s:colorscheme_choices[reltime()[1] % len(s:colorscheme_choices)]
 execute 'colors' s:colorscheme_choice
 let g:colors_name=s:colorscheme_choice
-set background=dark
 
 set fillchars+=vert:\ 
 "set encoding
@@ -208,6 +208,27 @@ function! CPPNew(fname)
   exe "vs " . fnameescape(s:hname)
 endfunction
 command! -nargs=1 -complete=file CPPOpen call CPPNew("<args>")
+
+"
+" Open C++ file under cursor
+"
+function! CPPRead()
+  wincmd gf
+  let s:opened_fname = bufname("%")
+  let s:fname = join(split(s:opened_fname, '\.')[:-2], '.')
+  let s:opened_ext = fnamemodify(s:opened_fname, ':e')
+
+  copen 3
+  wincmd k
+
+  if s:opened_ext == 'cpp'
+    exe "vs " . s:fname . '.hpp'
+  elseif s:opened_ext == 'hpp'
+    exe "vs " . s:fname . '.cpp'
+    wincmd r
+  endif
+endfunction
+nnoremap  <F2> :call CPPRead()<CR>
 
 "
 " some filetypes need extra configuration done once plugins have all loaded
