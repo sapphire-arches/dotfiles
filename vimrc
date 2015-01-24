@@ -144,7 +144,9 @@ syntax on
 
 let g:CSApprox_loaded = 1
 let s:colorscheme_choices = split("bubblegum anotherdark-terminal rdark-terminal2 distinguished gruvbox")
-execute 'colors' s:colorscheme_choices[reltime()[1] % len(s:colorscheme_choices)]
+let s:colorscheme_choice = s:colorscheme_choices[reltime()[1] % len(s:colorscheme_choices)]
+execute 'colors' s:colorscheme_choice
+let g:colors_name = s:colorscheme_choice
 set background=dark
 
 set fillchars+=vert:\ 
