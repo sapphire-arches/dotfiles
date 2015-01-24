@@ -16,6 +16,7 @@ call neobundle#end()
 
 NeoBundle 'airblade/vim-gitgutter.git'
 NeoBundle 'Shougo/neocomplete.vim.git'
+NeoBundle 'Rip-Rip/clang_complete'
 NeoBundle 'osyo-manga/vim-marching.git'
 NeoBundle 'Shougo/vimproc.vim', {
       \ 'build' : {
@@ -55,12 +56,21 @@ if !exists('g:neocomplete#sources#omni#input_patterns')
 endif
 
 "
-" vim-marching setup
+" Neocomplete <-> clang_complete setup
 "
-
-let g:marching_enable_neocomplete = 1
-let g:neocomplete#sources#omni#input_patterns.cpp =
-    \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.c =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.cpp =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:neocomplete#force_omni_input_patterns.objc =
+      \ '\[\h\w*\s\h\?\|\h\w*\%(\.\|->\)'
+let g:neocomplete#force_omni_input_patterns.objcpp =
+      \ '\[\h\w*\s\h\?\|\h\w*\%(\.\|->\)\|\h\w*::\w*'
+let g:clang_complete_auto = 0
+let g:clang_auto_select = 0
 
 "
 "setup status line
@@ -146,7 +156,7 @@ let g:CSApprox_loaded = 1
 let s:colorscheme_choices = split("bubblegum anotherdark-terminal rdark-terminal2 distinguished gruvbox")
 let s:colorscheme_choice = s:colorscheme_choices[reltime()[1] % len(s:colorscheme_choices)]
 execute 'colors' s:colorscheme_choice
-let g:colors_name = s:colorscheme_choice
+let g:colors_name=s:colorscheme_choice
 set background=dark
 
 set fillchars+=vert:\ 
@@ -206,8 +216,6 @@ function! FileTypeSpecialEnables()
   if &ft == 'c' || &ft == 'cpp'
     "  Disable preview buffer, we copen'd already
     set completeopt-=preview
-    "  enable completion automatically
-    let g:clang_complete_auto = 1
 
     "delimitMate - expand {<CR> to {<CR>}<ESC>O
     let g:delimitMate_expand_cr=1
