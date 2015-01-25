@@ -231,6 +231,11 @@ endfunction
 nnoremap  <F2> :call CPPRead()<CR>
 
 "
+" close tab
+"
+nnoremap  <F10> :tabc<CR>
+
+"
 " some filetypes need extra configuration done once plugins have all loaded
 "
 function! FileTypeSpecialEnables()
@@ -243,6 +248,8 @@ function! FileTypeSpecialEnables()
 
     " Use the same config file for syntastic and clang_complete
     let g:syntastic_cpp_config_file='.clang_complete'
+    " We want to check header files as well
+    let g:syntastic_cpp_check_header=1
     "We want to fold things syntax style for c files
     set foldmethod=syntax
   elseif &ft == 'tex'
