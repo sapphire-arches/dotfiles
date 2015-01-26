@@ -16,7 +16,9 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.SimplestFloat
 import XMonad.Layout.OneBig
 import XMonad.Layout.Simplest
+import XMonad.Operations
 import System.IO
+import Data.IORef
 import Data.List
 import Data.Maybe
 import Data.Traversable (traverse, fmapDefault)
@@ -24,6 +26,7 @@ import qualified XMonad.StackSet as W
 import Control.Monad.State.Lazy
 
 -- Starts an xmobar on a specified screen
+xmobar :: Int -> String -> IO (Handle)
 xmobar screen config = spawnPipe . intercalate " " $ options
     where options = [ "xmobar"
                      , "-x"
@@ -31,6 +34,7 @@ xmobar screen config = spawnPipe . intercalate " " $ options
                      , show config
                      ]
 
+writeHandles :: [Handle] -> String -> IO ()
 writeHandles h s = forM_ h $ flip hPutStrLn s
 
 -- Autofloat some special windows, put things in their place
@@ -138,17 +142,20 @@ logTitles = withWindowSet $ fmap Just . (\x ->
 -- And the main config
 main :: IO ()
 main = do
-    xmprocs <- sequence [ Main.xmobar 0 ".xmonad/xmobarrc"
-                        , Main.xmobar 1 ".xmonad/xmobar-secondaryrc"
-                        ]
+    xmprocs <- newIORef [] :: IO (IORef [Handle])
+    Main.xmobar 0 ".xmonad/xmobarrc" >>= (\x -> modifyIORef xmprocs ( x : ) )
     xmonad $ ewmh defaultConfig
         { terminal      = "terminator"
         , manageHook = myManageHook <+> manageHook defaultConfig
         , handleEventHook = docksEventHook
-        , layoutHook = myLayoutHook 
-        , startupHook = ewmhDesktopsStartup >> setWMName "LG3D"
+        , layoutHook = myLayoutHook
+        , startupHook = do ewmhDesktopsStartup
+                           setWMName "LG3D"
+                           screens <- withDisplay getCleanedScreenInfo
+                           bars <- io . sequence $ take ( ( length screens ) - 1 ) ( map (flip Main.xmobar ".xmonad/xmobar-secondaryrc") [1..] )
+                           io $ modifyIORef xmprocs ( bars ++ )
         , logHook = dynamicLogWithPP xmobarPP
-                        { ppOutput = writeHandles xmprocs
+                        { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
                         , ppTitle = wrap "[" "]" . xmobarColor "#859900" "" . formatTitle myTitleLength
                         , ppSep = "|"
                         , ppHidden = xmobarColor "#b58900" ""
