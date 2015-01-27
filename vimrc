@@ -198,7 +198,7 @@ let g:tex_flavor='latex'
 " custom command to set up an IDE-Like environment for c++
 "
 function! CPPNew(fname)
-  let s:fname = join(split(a:fname, '\.')[:-2], '.')
+  let s:fname = fnamemodify(a:fname, ':r')
   let s:cname = s:fname . '.cpp'
   let s:hname = s:fname . '.hpp'
   echom s:cname
