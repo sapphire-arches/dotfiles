@@ -203,8 +203,6 @@ function! CPPNew(fname)
   let s:hname = s:fname . '.hpp'
   echom s:cname
   exe "tabnew " . fnameescape(s:cname)
-  copen 3
-  wincmd k
   exe "vs " . fnameescape(s:hname)
 endfunction
 command! -nargs=1 -complete=file CPPOpen call CPPNew("<args>")
@@ -217,9 +215,6 @@ function! CPPRead()
   let s:opened_fname = bufname("%")
   let s:fname = join(split(s:opened_fname, '\.')[:-2], '.')
   let s:opened_ext = fnamemodify(s:opened_fname, ':e')
-
-  copen 3
-  wincmd k
 
   if s:opened_ext == 'cpp'
     exe "vs " . s:fname . '.hpp'
