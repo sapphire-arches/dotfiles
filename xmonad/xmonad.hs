@@ -18,6 +18,7 @@ import XMonad.Layout.OneBig
 import XMonad.Layout.Simplest
 import XMonad.Operations
 import System.IO
+import System.Process
 import Data.IORef
 import Data.List
 import Data.Maybe
@@ -149,9 +150,10 @@ logTitles = withWindowSet $ fmap Just . (\x ->
 main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
+    xrdb_out <- createProcess $ shell "xrdb -merge ~/.Xresources"
     Main.xmobar 0 ".xmonad/xmobarrc" >>= (\x -> modifyIORef xmprocs ( x : ) )
     xmonad $ ewmh defaultConfig
-        { terminal      = "terminator"
+        { terminal      = "urxvt"
         , manageHook = myManageHook <+> manageHook defaultConfig
         , handleEventHook = docksEventHook
         , layoutHook = myLayoutHook

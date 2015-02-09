@@ -71,6 +71,7 @@ let g:neocomplete#force_omni_input_patterns.objcpp =
       \ '\[\h\w*\s\h\?\|\h\w*\%(\.\|->\)\|\h\w*::\w*'
 let g:clang_complete_auto = 0
 let g:clang_auto_select = 0
+let g:clang_debug = 1
 
 "
 "setup status line
@@ -285,3 +286,10 @@ if has('nvim')
   runtime! plugin/plugin_setup.vim
   set backspace=indent,eol,start
 endif
+
+"
+" make :W work because releasing shift is hard
+"
+"
+
+command! W :w
