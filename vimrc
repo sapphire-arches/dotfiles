@@ -155,7 +155,7 @@ syntax on
 
 let g:CSApprox_loaded = 1
 set background=dark
-let s:colorscheme_choices = split("bubblegum anotherdark-terminal rdark-terminal2 distinguished gruvbox")
+let s:colorscheme_choices = split("bubblegum distinguished gruvbox")
 let s:colorscheme_choice = s:colorscheme_choices[reltime()[1] % len(s:colorscheme_choices)]
 execute 'colors' s:colorscheme_choice
 let g:colors_name=s:colorscheme_choice
@@ -169,6 +169,7 @@ set encoding=utf-8
 "
 " tab stuff
 set tabstop=2
+set softtabstop=2
 set shiftwidth=2
 set expandtab
 " current line number and jump numbers
@@ -261,6 +262,11 @@ function! FileTypeSpecialEnables()
     " Disable syntastic autochecking for scala files because scala is
     " incredibly slow
     let g:syntastic_mode_map = { "mode" : "passive" }
+  elseif &ft == 'haskell'
+    " 4 space tabs
+    set ts=4
+    set sts=4 " delete complete 'tab' in one keystroke
+    set sw=4
   endif
 endfunction
 
