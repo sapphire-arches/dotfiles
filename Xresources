@@ -46,9 +46,12 @@ URxvt*ScrollBar_right:  true
 URxvt*font:             xft:UbuntuMono-8
 URxvt*boldFont:         xft:UbuntuMono-8
 URxvt.perl-ext-common:      default,clipboard,url-select,keyboard-select
-URxvt.url-select.launcher:  firefox
+URxvt.url-select.launcher:  uzbl-browser
 URxvt.url-select.underline: true
 URxvt.keysym.M-u:           perl:url-select:select_next
 URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 URxvt.keysym.M-s:           perl:keyboard-select:search
+URxvt.keysym.S-C-V:         perl:clipboard:paste
+URxvt.keysym.S-C-C:         perl:clipboard:copy
+URxvt.iso14755:             False
 
