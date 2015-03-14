@@ -286,11 +286,27 @@ autocmd BufNewFile,BufRead * call FileTypeSpecialEnables()
 " disable dumb gentoo word width stuff
 autocmd BufNewFile,BufRead * set textwidth=0
 
+"
+" modelines are nice
+"
+set modeline
+
 " neovim usability stuff
 if has('nvim')
   " enable python support
   runtime! plugin/plugin_setup.vim
   set backspace=indent,eol,start
+
+  " use YCM for neovim because neocomplete doesn't worky =(
+
+  NeoBundle 'Valloric/YouCompleteMe', {
+       \ 'build' : {
+       \     'mac' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+       \     'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+       \     'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+       \     'cygwin' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
+       \    }
+       \ }
 endif
 
 "
