@@ -197,17 +197,29 @@ nnoremap  <F3>     :noh<CR>
 let g:tex_flavor='latex'
 
 "
-" custom command to set up an IDE-Like environment for c++
+" custom command to open environments where there are 2 important files
+" C/C++ header/source files are a good example of thise
 "
-function! CPPNew(fname)
+function! FriendNew(fname)
+  " mapping from ending to the setup it should create
+  let s:friends = {
+    \ 'c' : ['c', 'h'],
+    \ 'h' : ['c', 'h'],
+    \ 'cpp' : ['cpp', 'hpp'],
+    \ 'hpp' : ['cpp', 'hpp'],
+    \ }
+
   let s:fname = fnamemodify(a:fname, ':r')
-  let s:cname = s:fname . '.cpp'
-  let s:hname = s:fname . '.hpp'
-  echom s:cname
-  exe "tabnew " . fnameescape(s:cname)
-  exe "vs " . fnameescape(s:hname)
+  let s:fsuffix = fnamemodify(a:fname, ':e')
+  if has_key(s:friends, s:fsuffix)
+    let s:friendlist = s:friends[s:fsuffix]
+    exe "tabnew " . s:fname . '.' . fnameescape(s:friendlist[0])
+    for i in s:friendlist[1:]
+      exe "vs " . s:fname . '.' . fnameescape(i)
+    endfor
+  endif
 endfunction
-command! -nargs=1 -complete=file CPPOpen call CPPNew("<args>")
+command! -nargs=1 -complete=file FriendOpen call FriendNew("<args>")
 
 "
 " Open C++ file under cursor
