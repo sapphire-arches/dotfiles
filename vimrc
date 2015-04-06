@@ -16,7 +16,20 @@ call neobundle#end()
 
 NeoBundle 'airblade/vim-gitgutter.git'
 NeoBundle 'Shougo/neocomplete.vim.git'
-NeoBundle 'Rip-Rip/clang_complete'
+if has('nvim')
+  " use YCM for neovim because neocomplete doesn't worky =(
+  NeoBundle 'Valloric/YouCompleteMe', {
+       \ 'build' : {
+       \     'mac' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+       \     'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+       \     'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+       \     'cygwin' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
+       \    }
+       \ }
+else
+  " Otherwise use the lighter-weight clang_complete
+  NeoBundle 'Rip-Rip/clang_complete'
+endif
 NeoBundle 'osyo-manga/vim-marching.git'
 NeoBundle 'Shougo/vimproc.vim', {
       \ 'build' : {
@@ -34,6 +47,11 @@ NeoBundle 'scrooloose/syntastic.git'
 NeoBundle 'dart-lang/dart-vim-plugin.git'
 NeoBundle 'derekwyatt/vim-scala.git'
 NeoBundle 'godlygeek/csapprox'
+" haskell pacakges
+NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'eagletmt/neco-ghc'
+NeoBundle 'bitc/vim-hdevtools'
+NeoBundle 'lukerandall/haskellmode-vim'
 NeoBundleCheck
 
 "GitGutter - show diff status when writing
@@ -217,6 +235,8 @@ function! FriendNew(fname)
     for i in s:friendlist[1:]
       exe "vs " . s:fname . '.' . fnameescape(i)
     endfor
+  else
+    exe "tabnew " . a:fname
   endif
 endfunction
 command! -nargs=1 -complete=file FriendOpen call FriendNew("<args>")
@@ -261,11 +281,23 @@ function! FileTypeSpecialEnables()
     let g:syntastic_cpp_check_header=1
     "We want to fold things syntax style for c files
     set foldmethod=syntax
+
+    if has('nvim')
+      " map Ycm's GoTo
+      nnoremap <leader>jd :YcmCompleter GoTo<cr>
+    endif
   elseif &ft == 'tex'
     "Do special things for tex files
     set wrap
     set spell
     call matchdelete(g:cc_match_group)
+    "automatically save and 'compile' tex files when we leave insert mode
+    augroup texcompile
+      autocmd!
+      autocmd InsertLeave <buffer> execute ":w"
+      autocmd BufWrite <buffer> execute "!texi2pdf --clean % >/dev/null"
+      autocmd BufWrite <buffer> execute ":redraw!"
+    augroup end
   elseif &ft == 'dart'
     " Disable syntastic autochecking for dart files because dartanalyzer is
     " incredibly slow
@@ -298,6 +330,8 @@ autocmd BufNewFile,BufRead * call FileTypeSpecialEnables()
 " disable dumb gentoo word width stuff
 autocmd BufNewFile,BufRead * set textwidth=0
 
+" haskell setup
+let g:haddock_browser = 'firefox'
 "
 " modelines are nice
 "
@@ -305,20 +339,10 @@ set modeline
 
 " neovim usability stuff
 if has('nvim')
-  " enable python support
-  runtime! plugin/plugin_setup.vim
   set backspace=indent,eol,start
 
-  " use YCM for neovim because neocomplete doesn't worky =(
-
-  NeoBundle 'Valloric/YouCompleteMe', {
-       \ 'build' : {
-       \     'mac' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-       \     'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-       \     'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-       \     'cygwin' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
-       \    }
-       \ }
+  " use two escapes to exit terminals instead of <c-\><c-n>
+  tmap <esc><esc> <c-\><c-n>
 endif
 
 "
