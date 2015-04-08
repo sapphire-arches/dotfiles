@@ -10,9 +10,11 @@ if !exists('g:neocomplete#keyword_patterns')
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
+"if !exists('g:neocomplete#sources#omni#input_patterns')
+"  let g:neocomplete#sources#omni#input_patterns = {}
+"endif
+
+let g:neocomplete#min_keyword_length = 3
 
 "
 " Neocomplete <-> clang_complete setup
@@ -31,3 +33,5 @@ let g:neocomplete#force_omni_input_patterns.objcpp =
 let g:clang_complete_auto = 0
 let g:clang_auto_select = 0
 let g:clang_debug = 1
+
+autocmd BufReadPre setlocal omnifunc=necoghc#omnifunc

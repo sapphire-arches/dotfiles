@@ -15,7 +15,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 call neobundle#end()
 
 " completion plugins
-NeoBundle 'Shougo/neocomplete.vim.git'
+NeoBundle 'Shougo/neocomplete.vim'
 if has('nvim')
   " use YCM for neovim because neocomplete doesn't worky =(
   NeoBundle 'Valloric/YouCompleteMe', {
