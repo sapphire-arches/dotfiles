@@ -65,7 +65,7 @@ function! MyTabLabel(n)
     let mod = getbufvar(buflist[winnr - 1], "&mod")
     "build the tab string.
     let s = '['
-    let s .= a:n
+    let s .= a:n - 1
     let s .= '] '
     let s .= ((mod)?'*':'') . file
     let s .= ' (' . numBuffers . ')'
