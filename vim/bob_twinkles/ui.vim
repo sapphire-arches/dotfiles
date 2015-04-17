@@ -81,10 +81,11 @@ set laststatus=2
 "
 
 let g:CSApprox_loaded = 1
-set background=dark
 let s:colorscheme_choices = split("bubblegum distinguished gruvbox")
 let s:colorscheme_choice = s:colorscheme_choices[reltime()[1] % len(s:colorscheme_choices)]
 execute 'colors' s:colorscheme_choice
+" For whatever reason, some colorschemes only pick up the 'dark' setting if you do it after sourcing them
+set background=dark
 let g:colors_name=s:colorscheme_choice
 
 set fillchars+=vert:\ 
