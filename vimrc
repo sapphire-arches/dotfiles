@@ -91,9 +91,8 @@ function! FileTypeSpecialEnables()
     "automatically save and 'compile' tex files when we leave insert mode
     augroup texcompile
       autocmd!
-      autocmd InsertLeave <buffer> execute ":w"
-      autocmd BufWrite <buffer> execute "!texi2pdf --clean % >/dev/null"
-      autocmd BufWrite <buffer> execute ":redraw!"
+      autocmd BufWritePost *.tex execute "!texi2pdf --clean %"
+      autocmd BufWritePost *.tex execute ":redraw!"
     augroup end
   elseif &ft == 'dart'
     " Disable syntastic autochecking for dart files because dartanalyzer is
