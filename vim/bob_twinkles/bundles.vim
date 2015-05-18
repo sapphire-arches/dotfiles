@@ -16,7 +16,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 if has('lua')
   NeoBundle 'Shougo/neocomplete.vim'
 endif
-if has('nvim') || !has('python')
+if has('nvim')
   " use YCM for neovim because neocomplete doesn't worky =(
   NeoBundle 'Valloric/YouCompleteMe', {
        \ 'build' : {
