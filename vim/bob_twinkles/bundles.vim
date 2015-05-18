@@ -12,10 +12,10 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-call neobundle#end()
-
 " completion plugins
-NeoBundle 'Shougo/neocomplete.vim'
+if has('lua')
+  NeoBundle 'Shougo/neocomplete.vim'
+endif
 if has('nvim')
   " use YCM for neovim because neocomplete doesn't worky =(
   NeoBundle 'Valloric/YouCompleteMe', {
@@ -66,5 +66,7 @@ NeoBundle 'bitc/vim-hdevtools'
 NeoBundle 'eagletmt/ghcmod-vim'
 NeoBundle 'eagletmt/neco-ghc'
 NeoBundle 'lukerandall/haskellmode-vim'
+
+call neobundle#end()
 
 NeoBundleCheck
