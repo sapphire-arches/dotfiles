@@ -88,6 +88,7 @@ execute 'colors' s:colorscheme_choice
 set background=dark
 let g:colors_name=s:colorscheme_choice
 
+" Make the vertical seperator not a character
 set fillchars+=vert:\ 
 
 "GitGutter - show diff status when writing
