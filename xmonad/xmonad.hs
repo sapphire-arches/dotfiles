@@ -38,22 +38,15 @@ xmobar screen config = spawnPipe . intercalate " " $ options
 writeHandles :: [Handle] -> String -> IO ()
 writeHandles h s = forM_ h $ flip hPutStrLn s
 
+floatTitles = ["Fireworks", "Isometric Renderer", "Horse Race", "tile"
+              , "Krafty Kat", "W.o.T Client", "Phys Canvas", "testing"
+              , "xmessage"]
+
+floatTitleHook = composeAll $ map (\x -> title =? x --> doFloat ) floatTitles
+
 -- Autofloat some special windows, put things in their place
-myManageHook = composeAll
-    [ title =? "Fireworks"          --> doFloat
-    , title =? "Isomtric Renderer"  --> doFloat
-    , title =? "Horse Race"         --> doFloat
-    --, title =? "Minecraft"          --> doFloat
-    --, title =? "Minecraft Launcher" --> doFloat
-    --, title =? "Tekkit"             --> doFloat
-    , title =? "tile"               --> doFloat
-    , title =? "Krafty Kat"         --> doFloat
-    , title =? "W.o.T. Client"      --> doFloat
-    , title =? "Phys Canvas"        --> doFloat
-    , title =? "Eclipse"            --> doFloat
-    , title =? "testing"            --> doFloat
-    , title =? "xmessage"           --> doFloat
-    , title =? "Defend Rome"        --> doFullFloat
+myManageHook = floatTitleHook <+> composeAll
+    [ title =? "Defend Rome"        --> doFullFloat
     , title =? "Team Fortress 2 - OpenGL" --> doFullFloat
     , title =? "Nightly"            --> doShift "3"
     , className =? "orage"          --> doFloat
