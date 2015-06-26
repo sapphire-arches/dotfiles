@@ -55,3 +55,4 @@ URxvt.keysym.S-C-V:         perl:clipboard:paste
 URxvt.keysym.S-C-C:         perl:clipboard:copy
 URxvt.iso14755:             False
 
+*.international: true
