@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleContexts, FlexibleInstances, MultiParamTypeClasses #-}
 import XMonad
 import XMonad.Core
 import XMonad.Hooks.EwmhDesktops
@@ -12,10 +12,11 @@ import XMonad.Util.WorkspaceCompare
 import XMonad.Util.Loggers
 import XMonad.Util.NamedWindows (getName)
 import XMonad.Layout.Grid
+import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders
-import XMonad.Layout.SimplestFloat
 import XMonad.Layout.OneBig
 import XMonad.Layout.Simplest
+import XMonad.Layout.SimplestFloat
 import XMonad.Operations
 import System.IO
 import System.Process
@@ -25,6 +26,14 @@ import Data.Maybe
 import Data.Traversable (traverse, fmapDefault)
 import qualified XMonad.StackSet as W
 import Control.Monad.State.Lazy
+
+---------------------
+-- Random util stuff
+---------------------
+
+safeSplit :: [a] -> (Maybe a, [a])
+safeSplit []     = (Nothing, [])
+safeSplit (x:xs) = (Just x, xs)
 
 -- Starts an xmobar on a specified screen
 xmobar :: Int -> String -> IO (Handle)
@@ -59,7 +68,7 @@ myManageHook = floatTitleHook <+> composeAll
     ]
 
 -------------------------------------------------------------------------------
-------------------------Custom layout class------------------------------------
+------------------------Custom layout classes----------------------------------
 -------------------------------------------------------------------------------
 
 -- Thanks to sjdrodge for his help with making a less derpy implementation of
@@ -97,9 +106,46 @@ instance LayoutClass BinarySplit a where
       where resize Shrink = BinarySplit ( max 0 $ spacing - spacingDelta ) spacingDelta
             resize Expand = BinarySplit ( spacing + spacingDelta ) spacingDelta
 
+---------------
+-- PiP class --
+---------------
+
+makeInsetRect (Rectangle x y w h) s = Rectangle x y sw sh
+    where sw = floor $ fromIntegral w * s
+          sh = floor $ fromIntegral h * s
+
+data PictureInPicture a = PictureInPicture { insetScale :: Rational } deriving (Read, Show)
+
+instance LayoutModifier PictureInPicture Window where
+    modifyLayout (PictureInPicture ratio) = runPip ratio
+    modifierDescription = show
+
+runPip :: (LayoutClass l Window) =>
+                Rational
+             -> W.Workspace WorkspaceId (l Window) Window
+             -> Rectangle
+             -> X ([(Window, Rectangle)], Maybe (l Window))
+runPip scale wksp rect = do
+    let stack = W.stack wksp
+    let ws = W.integrate' stack
+    let (inset, rest) = safeSplit ws
+    case inset of
+        Just insetWin -> do
+            let filteredStack = stack >>= W.filter (insetWin /=)
+            let pipRect = makeInsetRect rect scale
+            wrs <- runLayout (wksp {W.stack = filteredStack}) rect
+            return ((insetWin, pipRect) : fst wrs, snd wrs)
+        Nothing -> runLayout wksp rect
+
+
+withPip s = ModifiedLayout $ PictureInPicture s
+
+
 myLayoutHook = noBorders $ avoidStrutsOn [D] $ (bsplit
                                              ||| Full
                                              ||| simplestFloat
+                                             ||| withPip (1/3) bsplit
+                                             ||| withPip (1/4) Full
                                              ||| tiled
                                              ||| Mirror tiled
                                              ||| OneBig (3/4) (3/4)) where
