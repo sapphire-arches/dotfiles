@@ -36,6 +36,11 @@ external_monitor_setup() {
     xrandr --output $1 --mode 1680x1050_60.00 --right-of LVDS1
 }
 
+termhere() {
+  # Create a terminal in the same directory as the current one
+  urxvt & disown
+}
+
 #fix colors on the framebuffer terms.
 if [ $TERM = linux ]; then
     echo -en "\e]P0232323" #black
