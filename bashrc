@@ -85,7 +85,7 @@ function __prompt_cmd {
   export phost="${txtred}\h${txtrst}"
   export ppath="${txtpur}\w${txtrst}"
 
-  if [[ $TERM == *"unicode"* ]]
+  if [[ $(locale charmap) == "UTF-8" ]]
   then
     br='┌'
     tr='└'
