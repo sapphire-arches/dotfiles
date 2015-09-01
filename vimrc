@@ -22,6 +22,8 @@ function! FriendNew(fname)
     \ 'h' : ['c', 'h'],
     \ 'cpp' : ['cpp', 'hpp'],
     \ 'hpp' : ['cpp', 'hpp'],
+    \ 'frag' : ['vert', 'frag'],
+    \ 'vert' : ['vert', 'frag'],
     \ }
 
   let s:fname = fnamemodify(a:fname, ':r')
