@@ -13,15 +13,23 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " completion plugins
+if has('lua')
+  NeoBundle 'Shougo/neocomplete.vim'
+endif
+" if has('nvim')
 let ycm_install_options = '--clang-completer --system-libclang --omnisharp-completer --racer-completer'
 NeoBundle 'Valloric/YouCompleteMe', {
      \ 'build' : {
-     \     'mac' : './install.sh ' . g:ycm_install_options,
-     \     'unix' : './install.sh ' . g:ycm_install_options,
-     \     'windows' : './install.sh ' . g:ycm_install_options,
-     \     'cygwin' : './install.sh ' . g:ycm_install_options
+     \     'mac' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+     \     'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+     \     'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+     \     'cygwin' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
      \    }
      \ }
+" else
+"   " Otherwise use the lighter-weight clang_complete
+"   NeoBundle 'Rip-Rip/clang_complete'
+" endif
 
 " Utility/library bundles
 NeoBundle 'osyo-manga/vim-marching.git'

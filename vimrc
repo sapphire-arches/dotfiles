@@ -67,6 +67,9 @@ nnoremap  <F10> :tabc<CR>
 " some filetypes need extra configuration done once plugins have all loaded
 "
 function! FileTypeSpecialEnables()
+  if &ft == 'cpp'
+    let g:syntastic_cpp_compiler_options='-std=c++11'
+  endif
   if &ft == 'c' || &ft == 'cpp'
     "  Disable preview buffer, we copen'd already
     set completeopt-=preview

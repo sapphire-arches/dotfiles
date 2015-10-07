@@ -38,7 +38,7 @@ external_monitor_setup() {
 
 termhere() {
   # Create a terminal in the same directory as the current one
-  urxvt & disown
+  urxvt < /dev/null > /dev/null & disown
 }
 
 #fix colors on the framebuffer terms.
