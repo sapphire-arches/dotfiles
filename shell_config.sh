@@ -90,6 +90,11 @@ export PATH="$PATH:$HOME/.cabal/bin:$HOME/Scripts"
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="$HOME/Scripts/overrides:$PATH"
 
+if [ -x $HOME/.local_config.sh ]
+then
+  . $HOME/.local_config.sh
+fi
+
 # The probability of this causing bad behavior is pretty low
 if [ $TERM = 'xterm' ]; then
     export TERM='xterm-256color'
