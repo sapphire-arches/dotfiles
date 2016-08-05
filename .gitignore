@@ -1,1 +1,4 @@
+# temporary files
 .*.swp
+# Don't save vim spelling
+vim/spell
