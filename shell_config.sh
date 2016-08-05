@@ -99,3 +99,7 @@ fi
 if [ $TERM = 'xterm' ]; then
     export TERM='xterm-256color'
 fi
+
+# nice beep alias
+export BEEP='/usr/share/sounds/KDE-Sys-App-Positive.ogg'
+alias beep='paplay $BEEP'
