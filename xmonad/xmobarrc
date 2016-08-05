@@ -4,10 +4,17 @@ Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
        , position = BottomW L 100
        , lowerOnStart = True
        , commands = [ Run Cpu ["-L","3","-H","50","--normal","#859900","--high","#dc322f"] 10
-                    , Run Battery [ "-L","15","-l","#dc322f","-H","95","-h","#859900"
-                                  , "-t","Batt: <left>% <timeleft> <acstatus>"
-                                  , "--","-o","<fc=#dc322f>Off</fc>","-O","<fc=#859900>On </fc>","-p","#859900"
-                                  , "-f","AC0/online"] 10
+                    , Run BatteryP ["AC", "AC0", "CMB1"]
+                        [ "-L", "15"
+                        , "-l", "#dc322f"
+                        , "-H", "95"
+                        , "-h","#859900"
+                        , "-t","Batt: <left>% <timeleft> <acstatus>"
+                        , "--"
+                        , "-o", "<fc=#dc322f>Off</fc>"
+                        , "-O", "<fc=#859900>On </fc>"
+                        ,"-p", "#859900"
+                        , "-f","AC/online"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     , Run Com "/home/bob_twinkles/.xmonad/volume.sh" [] "volume" 30
