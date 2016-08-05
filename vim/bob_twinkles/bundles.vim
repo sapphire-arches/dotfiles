@@ -16,20 +16,14 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 if has('lua')
   NeoBundle 'Shougo/neocomplete.vim'
 endif
-if has('nvim')
-  " use YCM for neovim because neocomplete doesn't worky =(
-  NeoBundle 'Valloric/YouCompleteMe', {
-       \ 'build' : {
-       \     'mac' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-       \     'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-       \     'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-       \     'cygwin' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
-       \    }
-       \ }
-else
-  " Otherwise use the lighter-weight clang_complete
-  NeoBundle 'Rip-Rip/clang_complete'
-endif
+NeoBundle 'Valloric/YouCompleteMe', {
+     \ 'build' : {
+     \     'mac' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+     \     'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+     \     'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
+     \     'cygwin' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
+     \    }
+     \ }
 
 " Utility/library bundles
 NeoBundle 'osyo-manga/vim-marching.git'
@@ -55,17 +49,21 @@ NeoBundle 'scrooloose/syntastic.git'
 NeoBundle 'flazz/vim-colorschemes.git'
 NeoBundle 'godlygeek/csapprox'
 
-"
-" assorted language plugins
-"
-NeoBundle 'dart-lang/dart-vim-plugin.git'
-NeoBundle 'derekwyatt/vim-scala.git'
+" "
+" " assorted language plugins
+" "
+" NeoBundle 'dart-lang/dart-vim-plugin.git'
+" NeoBundle 'derekwyatt/vim-scala.git'
+" 
+" " haskell pacakges
+" NeoBundle 'bitc/vim-hdevtools'
+" NeoBundle 'eagletmt/ghcmod-vim'
+" NeoBundle 'eagletmt/neco-ghc'
+" NeoBundle 'lukerandall/haskellmode-vim'
+" 
 
-" haskell pacakges
-NeoBundle 'bitc/vim-hdevtools'
-NeoBundle 'eagletmt/ghcmod-vim'
-NeoBundle 'eagletmt/neco-ghc'
-NeoBundle 'lukerandall/haskellmode-vim'
+" postgresql syntax files
+NeoBundle 'exu/pgsql.vim'
 
 call neobundle#end()
 
