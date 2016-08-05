@@ -1,4 +1,4 @@
-Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
+Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
        , bgColor = "#fdf6e3"
        , fgColor = "#657b83"
        , position = BottomW L 100
