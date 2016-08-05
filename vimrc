@@ -89,11 +89,11 @@ function! FileTypeSpecialEnables()
     set spell
     call matchdelete(g:cc_match_group)
     "automatically save and 'compile' tex files when we leave insert mode
-    augroup texcompile
-      autocmd!
-      autocmd BufWritePost *.tex execute "!texi2pdf --clean %"
-      autocmd BufWritePost *.tex execute ":redraw!"
-    augroup end
+    " augroup texcompile
+    "   autocmd!
+    "   autocmd BufWritePost *.tex execute "!texi2pdf --clean %"
+    "   autocmd BufWritePost *.tex execute ":redraw!"
+    " augroup end
   elseif &ft == 'dart'
     " Disable syntastic autochecking for dart files because dartanalyzer is
     " incredibly slow
