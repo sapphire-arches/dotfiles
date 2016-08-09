@@ -92,9 +92,14 @@ function __prompt_cmd {
     lr='─'
     lterminator='╼'
     # first line
-    PS1+="${br} ${pnjobs} ${lr} ${puser}@${phost} ${lr} ${ppath}\n"
+    PS1+="${br} ${pnjobs} ${lr} ${puser}@${phost} ${lr} ${ppath}"
+    if [ ! -z ${VIRTUAL_ENV} ]
+    then
+      venv_relpath=$(python -c "import os.path; print(os.path.relpath('${VIRTUAL_ENV}', '$(pwd)'))")
+      PS1+=" (${venv_relpath})"
+    fi
     # Second line
-    PS1+="${tr}"
+    PS1+="\n${tr}"
     if [ $EXIT != "0" ]
     then
       PS1+="${txtred}${lterminator} ${txtblk}${bakred}$EXIT${txtrst}"
