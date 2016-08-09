@@ -43,8 +43,8 @@ URxvt*.depth:           32
 URxvt*.transparent:     true
 URxvt*scrollBar:        false
 URxvt*ScrollBar_right:  true
-URxvt*font:             xft:UbuntuMono:size=9
-URxvt*boldFont:         xft:UbuntuMono:size=9
+URxvt*font:             xft:UbuntuMono:size=11
+URxvt*boldFont:         xft:UbuntuMono:size=11
 URxvt.perl-ext-common:      default,clipboard,url-select,keyboard-select
 URxvt.url-select.launcher:  firefox
 URxvt.url-select.underline: true
