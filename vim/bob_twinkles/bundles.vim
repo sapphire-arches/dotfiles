@@ -16,12 +16,13 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 if has('lua')
   NeoBundle 'Shougo/neocomplete.vim'
 endif
+let ycm_install_options = '--clang-completer --system-libclang --omnisharp-completer --racer-completer'
 NeoBundle 'Valloric/YouCompleteMe', {
      \ 'build' : {
-     \     'mac' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-     \     'unix' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-     \     'windows' : './install.sh --clang-completer --system-libclang --omnisharp-completer',
-     \     'cygwin' : './install.sh --clang-completer --system-libclang --omnisharp-completer'
+     \     'mac' : './install.sh ' . g:ycm_install_options,
+     \     'unix' : './install.sh ' . g:ycm_install_options,
+     \     'windows' : './install.sh ' . g:ycm_install_options,
+     \     'cygwin' : './install.sh ' . g:ycm_install_options
      \    }
      \ }
 

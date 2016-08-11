@@ -35,3 +35,5 @@ let g:clang_auto_select = 0
 let g:clang_debug = 1
 
 autocmd BufReadPre setlocal omnifunc=necoghc#omnifunc
+
+let g:ycm_rust_src_path = '/home/bob_twinkles/Code/rust/rust/src'
