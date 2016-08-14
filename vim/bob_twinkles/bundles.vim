@@ -66,6 +66,13 @@ NeoBundle 'godlygeek/csapprox'
 " postgresql syntax files
 NeoBundle 'exu/pgsql.vim'
 
+" Sort motion
+NeoBundle 'christoomey/vim-sort-motion'
+
+" Surround stuff
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-repeat'
+
 call neobundle#end()
 
 NeoBundleCheck
