@@ -185,11 +185,16 @@ logTitles = withWindowSet $ fmap Just . (\x ->
             desiredLength = min (quot 50 numWindows) myTitleLength
           in fmap (formatTitles desiredLength) titles)
 
+doStartup :: IO (ProcessHandle)
+doStartup = do
+    (_, _, _, handle) <- createProcess $ shell "~/.xmonad/startup.sh"
+    return handle
+
 -- And the main config
 main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
-    xrdb_out <- createProcess $ shell "xrdb -merge ~/.Xresources"
+    doStartup
     Main.xmobar 0 ".xmonad/xmobarrc" >>= (\x -> modifyIORef xmprocs ( x : ) )
     xmonad $ ewmh defaultConfig
         { terminal      = "urxvt"

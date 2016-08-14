@@ -40,7 +40,7 @@ Xftantialias:           true
 Xft*hinting:            full
 
 URxvt*.depth:           32
-URxvt*.transparent:     true
+URxvt*.transparent:     false
 URxvt*scrollBar:        false
 URxvt*ScrollBar_right:  true
 URxvt*font:             xft:UbuntuMono:size=11
