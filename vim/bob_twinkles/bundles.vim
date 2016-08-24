@@ -13,9 +13,6 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " completion plugins
-if has('lua')
-  NeoBundle 'Shougo/neocomplete.vim'
-endif
 let ycm_install_options = '--clang-completer --system-libclang --omnisharp-completer --racer-completer'
 NeoBundle 'Valloric/YouCompleteMe', {
      \ 'build' : {
