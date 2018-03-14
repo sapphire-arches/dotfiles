@@ -209,6 +209,8 @@ doStartup = do
     (_, _, _, handle) <- createProcess $ shell "~/.xmonad/startup.sh"
     return handle
 
+myWorkspaces = ["✪", "✎", "☭", "4", "5", "6", "7", "♫", "⌶"]
+
 -- And the main config
 main :: IO ()
 main = do
@@ -240,6 +242,7 @@ main = do
         , borderWidth = 2
         , normalBorderColor  = "#268bd2"
         , focusedBorderColor = "#dc322f"
+        , workspaces = myWorkspaces
         } `additionalKeys`
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
         , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -a")
