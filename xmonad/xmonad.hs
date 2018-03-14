@@ -204,7 +204,7 @@ myPPOrder xs =
         (a, b) = splitAt 2 xs
     in a ++ drop 1 b
 
-doStartup :: IO (ProcessHandle)
+doStartup :: IO ProcessHandle
 doStartup = do
     (_, _, _, handle) <- createProcess $ shell "~/.xmonad/startup.sh"
     return handle
