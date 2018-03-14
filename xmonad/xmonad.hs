@@ -111,43 +111,48 @@ instance LayoutClass BinarySplit a where
 -- PiP class --
 ---------------
 
-makeInsetRect (Rectangle x y w h) s = Rectangle x y sw sh
-    where sw = floor $ fromIntegral w * s
-          sh = floor $ fromIntegral h * s
+makeInsetRect (Rectangle x y w h) sw sh = Rectangle x y ow oh
+    where ow = floor $ fromIntegral w * sw
+          oh = floor $ fromIntegral h * sh
 
-data PictureInPicture a = PictureInPicture { insetScale :: Rational } deriving (Read, Show)
+data PictureInPicture a = PictureInPicture {
+    insetScaleWidth :: Rational,
+    insetScaleHeight :: Rational
+} deriving (Read, Show)
 
 instance LayoutModifier PictureInPicture Window where
-    modifyLayout (PictureInPicture ratio) = runPip ratio
+    modifyLayout (PictureInPicture wr hr) = runPip wr hr
     modifierDescription = show
 
 runPip :: (LayoutClass l Window) =>
                 Rational
+             -> Rational
              -> W.Workspace WorkspaceId (l Window) Window
              -> Rectangle
              -> X ([(Window, Rectangle)], Maybe (l Window))
-runPip scale wksp rect = do
+runPip scaleW scaleH wksp rect = do
     let stack = W.stack wksp
     let ws = W.integrate' stack
     let (inset, rest) = safeSplit ws
     case inset of
         Just insetWin -> do
             let filteredStack = stack >>= W.filter (insetWin /=)
-            let pipRect = makeInsetRect rect scale
+            let pipRect = makeInsetRect rect scaleW scaleH
             wrs <- runLayout (wksp {W.stack = filteredStack}) rect
             return ((insetWin, pipRect) : fst wrs, snd wrs)
         Nothing -> runLayout wksp rect
 
 
-withPip s = ModifiedLayout $ PictureInPicture s
+withPip s = ModifiedLayout $ PictureInPicture s s
+withPipSeparate w h = ModifiedLayout $ PictureInPicture w h
 
 
 myLayoutHook = noBorders $ avoidStrutsOn [D] $ (bsplit
                                              ||| Full
+                                             ||| tiled
                                              ||| simplestFloat
                                              ||| withPip (1/3) bsplit
-                                             ||| withPip (1/4) Full
-                                             ||| tiled
+                                             ||| withPipSeparate (2/3) (1/6) Full
                                              ||| Mirror tiled
                                              ||| OneBig (3/4) (3/4)) where
                  bsplit = BinarySplit 8 6
