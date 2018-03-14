@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts, FlexibleInstances, MultiParamTypeClasses #-}
 import XMonad
+import XMonad.Actions.UpdatePointer(updatePointer)
 import XMonad.Core
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
@@ -215,7 +216,8 @@ main = do
                         , ppCurrent = wrap "[" "]" . xmobarColor "#dc322f" "" 
                         , ppHiddenNoWindows = xmobarColor "#93a1a1" ""
                         , ppExtras = [ logTitles ]
-                        }
+                        } >>
+                    updatePointer (0.5, 0.5) (0.8, 0.8)
         , borderWidth = 2
         , normalBorderColor  = "#268bd2"
         , focusedBorderColor = "#dc322f"
