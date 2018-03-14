@@ -11,7 +11,7 @@ import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.Loggers
-import XMonad.Util.NamedWindows (getName)
+import XMonad.Util.NamedWindows (unName, getName)
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders
@@ -162,34 +162,47 @@ myLayoutHook = noBorders $ avoidStrutsOn [D] $ (bsplit
                  ratio = 1/2
 
 -- XMobar output stuff
-myTitleLength = 30
+myTitleLength = 100
 
 formatTitle :: Int -> String -> String
 formatTitle maxLength t
-    | len <  maxLength = formatTitle maxLength ( t ++ " " )
+    | len <  maxLength = t
     | len == maxLength = t
     | len >  maxLength = shorten maxLength t
     where len = length t;
 
-formatTitles :: Int -> [String] -> String
-formatTitles maxLength ( x : xs ) = "[" ++ (formatTitle maxLength x) ++ "]" ++ formatTitles maxLength xs
-formatTitles maxLength _          = ""
+formatTitles :: Int -> Window -> [(Window, String)] -> String
+formatTitles maxLength focused = intercalate " | " . map doFormat
+    where doFormat (w, t) = (if w == focused then xmobarColor "#859900" "" else id)
+                                (formatTitle maxLength t)
 
-listWindowTitles :: [Window] -> X [String]
-listWindowTitles xs = traverse (fmap show . getName) xs
+listWindowTitles :: [Window] -> X [(Window, String)]
+listWindowTitles = traverse (fmap getTitle . getName)
+    where getTitle w = (unName w, show w)
 
 logTitles :: X ( Maybe String )
-logTitles = withWindowSet $ fmap Just . (\x ->
-          let 
-            focused       = W.peek x
-            allWindows    = W.index x
-            windows       = case focused of
-                                 Nothing -> []
-                                 Just x  -> filter (\y -> not ( Just y == focused ) ) allWindows
-            numWindows    = length windows
-            titles        = listWindowTitles windows
-            desiredLength = min (quot 50 numWindows) myTitleLength
-          in fmap (formatTitles desiredLength) titles)
+logTitles = withWindowSet $ formatStackSet
+    where
+        formatStackSet :: WindowSet -> X (Maybe String)
+        formatStackSet s =
+            let
+                windows       = W.index s
+                titles        = listWindowTitles windows
+            -- Outer fmap is to extract titles, since that needs to be in the X monad
+            in fmap (\wintitles -> fmap (\focused ->
+                -- Inner fmap is just convenience over Maybe
+                let
+                    numWindows    = length windows
+                    desiredLength = min (quot 200 numWindows) myTitleLength
+                in formatTitles desiredLength focused wintitles) (W.peek s)
+            ) titles
+
+-- We get the strings in the order: [workspace, layout, current, .. ppExtras ..]
+myPPOrder:: [String] -> [String]
+myPPOrder xs =
+    let
+        (a, b) = splitAt 2 xs
+    in a ++ drop 1 b
 
 doStartup :: IO (ProcessHandle)
 doStartup = do
@@ -215,12 +228,13 @@ main = do
                            io $ modifyIORef xmprocs ( bars ++ )
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
-                        , ppTitle = wrap "[" "]" . xmobarColor "#859900" "" . formatTitle myTitleLength
-                        , ppSep = "|"
+                        , ppSep = " ◆ "
                         , ppHidden = xmobarColor "#b58900" ""
-                        , ppCurrent = wrap "[" "]" . xmobarColor "#dc322f" "" 
+                        , ppCurrent = xmobarColor "#dc322f" "" 
                         , ppHiddenNoWindows = xmobarColor "#93a1a1" ""
                         , ppExtras = [ logTitles ]
+                        , ppLayout = (head . words)
+                        , ppOrder = myPPOrder
                         } >>
                     updatePointer (0.5, 0.5) (0.8, 0.8)
         , borderWidth = 2
