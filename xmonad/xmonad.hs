@@ -197,6 +197,10 @@ logTitles = withWindowSet $ formatStackSet
                 in formatTitles desiredLength focused wintitles) (W.peek s)
             ) titles
 
+-- Utility function for setting the font
+xmobarFont :: Int -> String -> String
+xmobarFont i = wrap (concat ["<fn=", show i, ">"]) "</fn>"
+
 -- We get the strings in the order: [workspace, layout, current, .. ppExtras ..]
 myPPOrder:: [String] -> [String]
 myPPOrder xs =
@@ -209,7 +213,7 @@ doStartup = do
     (_, _, _, handle) <- createProcess $ shell "~/.xmonad/startup.sh"
     return handle
 
-myWorkspaces = ["✪", "✎", "☭", "4", "5", "6", "7", "♫", "⌶"]
+myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "6", "7", "\xf001", "\xf1d7"]
 
 -- And the main config
 main :: IO ()
@@ -230,9 +234,9 @@ main = do
                            io $ modifyIORef xmprocs ( bars ++ )
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
-                        , ppSep = " ◆ "
+                        , ppSep = " \xb7 "
                         , ppHidden = xmobarColor "#b58900" ""
-                        , ppCurrent = xmobarColor "#dc322f" "" 
+                        , ppCurrent = xmobarColor "#dc322f" ""
                         , ppHiddenNoWindows = xmobarColor "#93a1a1" ""
                         , ppExtras = [ logTitles ]
                         , ppLayout = (head . words)
