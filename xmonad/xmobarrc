@@ -1,27 +1,25 @@
-Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
+Config { font = "xft:Bitstream Vera Sans Mono:size=10,antialias=true,Symbols Nerd Font:size=10:antialias=true"
        , bgColor = "#fdf6e3"
        , fgColor = "#657b83"
        , position = BottomW L 100
        , lowerOnStart = True
-       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#859900","--high","#dc322f"] 10
-                    , Run BatteryP ["AC", "AC0", "CMB1"]
-                        [ "-L", "15"
-                        , "-l", "#dc322f"
-                        , "-H", "95"
-                        , "-h","#859900"
-                        , "-t","Batt: <left>% <timeleft> <acstatus>"
-                        , "--"
-                        , "-o", "<fc=#dc322f>Off</fc>"
-                        , "-O", "<fc=#859900>On </fc>"
-                        ,"-p", "#859900"
-                        , "-f","AC/online"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+       , iconRoot = "/home/bob_twinkles/.xmonad/xmb_icons/"
+       , commands = [ Run MultiCpu ["-L","3"
+                                   ,"-H","50"
+                                   ,"--normal","#859900"
+                                   ,"--high","#dc322f"
+                                   ,"-t","\xf483<total> <autoipat>"
+                                   ,"--"
+                                   ,"--load-icon-pattern","<icon=vbar_%%.xpm/>"
+                                   ,"--fallback-icon-pattern","<icon=vbar_%%.xpm/>"
+                                   ] 10
+                    , Run Memory ["-t","\xe266<usedratio>%"] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     , Run Com "/home/bob_twinkles/.xmonad/volume.sh" [] "volume" 30
-                    , Run ThermalZone 0 [] 30
+                    , Run ThermalZone 0 ["-t","\xe780<temp>"] 30
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%thermal0% %volume% %cpu%<fc=#9ca1a1>|</fc>%memory%<fc=#9ca1a1>|</fc><fc=#cb4b16>%date%</fc><fc=#9ca1a1>|</fc>%battery%"
+       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% <fc=#cb4b16>%date%</fc><fc=#9ca1a1>|</fc>"
        }

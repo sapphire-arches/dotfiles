@@ -1,0 +1,20 @@
+/* XPM */
+static char *vbar_0[] = {
+/* columns rows colors chars-per-pixel */
+"8 12 2 1",
+"  c none",
+". c #000000",
+/* pixels */
+"        ",
+"        ",
+"        ",
+"        ",
+"        ",
+"        ",
+"        ",
+"        ",
+"        ",
+"        ",
+"        ",
+"........"
+}
