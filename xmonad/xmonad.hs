@@ -50,7 +50,7 @@ writeHandles h s = forM_ h $ flip hPutStrLn s
 
 floatTitles = ["Fireworks", "Isometric Renderer", "Horse Race", "tile"
               , "Krafty Kat", "W.o.T Client", "Phys Canvas", "testing"
-              , "xmessage"]
+              , "xmessage", "Synth input"]
 
 floatTitleHook = composeAll $ map (\x -> title =? x --> doFloat ) floatTitles
 
