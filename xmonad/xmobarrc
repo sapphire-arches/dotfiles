@@ -1,4 +1,4 @@
-Config { font = "xft:Bitstream Vera Sans Mono:size=10,antialias=true,Symbols Nerd Font:size=10:antialias=true"
+Config { font = "xft:Symbols Nerd Font:size=10:antialias=true,Bitstream Vera Sans Mono:size=10:antialias=true"
        , bgColor = "#fdf6e3"
        , fgColor = "#657b83"
        , position = BottomW L 100
