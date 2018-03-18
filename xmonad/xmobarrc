@@ -9,11 +9,12 @@ Config { font = "xft:Symbols Nerd Font:size=10:antialias=true,Bitstream Vera San
                                    ,"--normal","#859900"
                                    ,"--high","#dc322f"
                                    ,"-t","\xf483<total> <autoipat>"
+                                   ,"-p","3"
                                    ,"--"
                                    ,"--load-icon-pattern","<icon=vbar_%%.xpm/>"
                                    ,"--fallback-icon-pattern","<icon=vbar_%%.xpm/>"
                                    ] 10
-                    , Run Memory ["-t","\xe266<usedratio>%"] 10
+                    , Run Memory ["-p","3","-t","\xe266<usedratio>%"] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     , Run Com "/home/bob_twinkles/.xmonad/volume.sh" [] "volume" 30
                     , Run ThermalZone 0 ["-t","\xe780<temp>"] 30
