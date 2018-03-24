@@ -307,7 +307,7 @@ main = do
         , ((mod4Mask, xK_w), setLayout $ Layout $ layoutWrapper $ defaultWrittingMode)
         , ((mod4Mask, xK_s), sendMessage $ ToggleStrut R)
         , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
-        , ((0, 0x1008ff13), spawn "amixer -q set Master 5000+") --XF86AudioRaiseVolume
-        , ((0, 0x1008ff11), spawn "amixer -q set Master 5000-") --XF86AudioLowerVolume
-        , ((0, 0x1008ff12), spawn "amixer -q set Master toggle") --XF86AudioMute
+        , ((0, 0x1008ff13), spawn "amixer -D pulse -q set Master 5000+") --XF86AudioRaiseVolume
+        , ((0, 0x1008ff11), spawn "amixer -D pulse -q set Master 5000-") --XF86AudioLowerVolume
+        , ((0, 0x1008ff12), spawn "amixer -D pulse -q set Master toggle") --XF86AudioMute
         ]
