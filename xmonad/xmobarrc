@@ -34,5 +34,5 @@ Config { font = "xft:Symbols Nerd Font:size=10:antialias=true,Bitstream Vera San
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% <fc=#cb4b16>%date%</fc> %battery%"
+       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% %volume% <fc=#cb4b16>%date%</fc>"
        }
