@@ -288,6 +288,7 @@ main = do
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
                         , ppSep = " \xb7 "
+                        , ppVisible = xmobarColor "#859900" ""
                         , ppHidden = xmobarColor "#b58900" ""
                         , ppCurrent = xmobarColor "#dc322f" ""
                         , ppHiddenNoWindows = xmobarColor "#93a1a1" ""
