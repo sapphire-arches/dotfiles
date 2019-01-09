@@ -147,14 +147,19 @@ withPip s = ModifiedLayout $ PictureInPicture s s
 withPipSeparate w h = ModifiedLayout $ PictureInPicture w h
 
 
-myLayoutHook = noBorders $ avoidStrutsOn [D,U] $ (bsplit
-                                             ||| Full
-                                             ||| tiled
-                                             ||| simplestFloat
-                                             ||| withPip (1/3) bsplit
-                                             ||| withPipSeparate (2/3) (1/6) Full
-                                             ||| Mirror tiled
-                                             ||| OneBig (3/4) (3/4)) where
+
+layoutWrapper :: (LayoutClass l Window) =>
+                 l Window -> ModifiedLayout WithBorder (ModifiedLayout AvoidStruts l) Window
+layoutWrapper = noBorders . avoidStrutsOn [D,U]
+
+myLayoutHook = layoutWrapper (bsplit
+                             ||| Full
+                             ||| tiled
+                             ||| simplestFloat
+                             ||| withPip (1/3) bsplit
+                             ||| withPipSeparate (2/3) (1/6) Full
+                             ||| Mirror tiled
+                             ||| OneBig (3/4) (3/4)) where
                  bsplit = BinarySplit 8 6
                  tiled = Tall nmaster delta ratio
                  nmaster = 1
