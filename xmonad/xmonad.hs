@@ -149,32 +149,33 @@ withPipSeparate w h = ModifiedLayout $ PictureInPicture w h
 ------------------------------
 -- Writing mode layout hook --
 ------------------------------
-writtingVerticalScale :: Rational
-writtingVerticalScale = (1/2)
+writtingVerticalFraction :: Rational
+writtingVerticalFraction = 1
 
-writtingHorizontalScale :: Rational
-writtingHorizontalScale = 1
+writtingHorizontalFraction :: Rational
+writtingHorizontalFraction = (1/2)
 
 defaultWrittingMode :: WrittingMode Window
-defaultWrittingMode = WrittingMode writtingHorizontalScale writtingVerticalScale 1
+defaultWrittingMode = WrittingMode writtingHorizontalFraction writtingVerticalFraction 1
 
-data WrittingMode a = WrittingMode { horizScale :: Rational
-                                   , vertScale :: Rational
+data WrittingMode a = WrittingMode { horizontalFraction :: Rational
+                                   , verticalFraction :: Rational
                                    , numFocus :: Int
                                    } deriving (Read, Show)
 
 instance LayoutClass WrittingMode Window where
     pureLayout (WrittingMode horizontal vertical numFocus) rectangle stack = let
         windows = W.integrate stack
+        hscale = max 0 (min 1 (horizontal * fromIntegral numFocus))
       in
-        runWritting horizontal vertical (take numFocus windows) numFocus rectangle
+        runWritting hscale vertical (take numFocus windows) numFocus rectangle
     emptyLayout _ _ = return ([], Nothing)
 
     pureMessage (WrittingMode horizontal vertical nfocus ) m =
         msum [fmap resize (fromMessage m)
              ,fmap incmastern (fromMessage m)]
-      where resize Shrink = WrittingMode horizontal (vertical * (8/9)) nfocus
-            resize Expand = WrittingMode horizontal (min 1 $ vertical * (9/8)) nfocus
+      where resize Shrink = WrittingMode (horizontal * (8/9)) vertical nfocus
+            resize Expand = WrittingMode (min 1 $ horizontal * (9/8)) vertical nfocus
             incmastern (IncMasterN d) = WrittingMode horizontal vertical (max 1 (nfocus + d))
 
 runWritting :: Rational
@@ -183,13 +184,13 @@ runWritting :: Rational
             -> Int
             -> Rectangle
             -> [(Window, Rectangle)]
-runWritting scaleH scaleW windows nwindows (Rectangle ix iy iw ih) =
+runWritting fracH fracV windows nwindows (Rectangle ix iy iw ih) =
   let
-    doScale start size scale = let
+    doFrac start size frac = let
          fsize = fromIntegral size
-       in (floor $ fsize * scale, floor $ fromIntegral start + (fsize * (1 - scale) / 2))
-    (h, y) = doScale iy ih scaleH
-    (w, x) = doScale ix iw scaleW
+       in (floor $ fsize * frac, floor $ fromIntegral start + (fsize * (1 - frac) / 2))
+    (h, y) = doFrac iy ih fracV
+    (w, x) = doFrac ix iw fracH
     scaledrect = Rectangle x y w h
     rects = splitHorizontally nwindows scaledrect
   in
