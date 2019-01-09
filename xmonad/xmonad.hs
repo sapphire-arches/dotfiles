@@ -146,7 +146,54 @@ runPip scaleW scaleH wksp rect = do
 withPip s = ModifiedLayout $ PictureInPicture s s
 withPipSeparate w h = ModifiedLayout $ PictureInPicture w h
 
+------------------------------
+-- Writing mode layout hook --
+------------------------------
+writtingVerticalScale :: Rational
+writtingVerticalScale = (1/2)
 
+writtingHorizontalScale :: Rational
+writtingHorizontalScale = 1
+
+defaultWrittingMode :: WrittingMode Window
+defaultWrittingMode = WrittingMode writtingHorizontalScale writtingVerticalScale 1
+
+data WrittingMode a = WrittingMode { horizScale :: Rational
+                                   , vertScale :: Rational
+                                   , numFocus :: Int
+                                   } deriving (Read, Show)
+
+instance LayoutClass WrittingMode Window where
+    pureLayout (WrittingMode horizontal vertical numFocus) rectangle stack = let
+        windows = W.integrate stack
+      in
+        runWritting horizontal vertical (take numFocus windows) numFocus rectangle
+    emptyLayout _ _ = return ([], Nothing)
+
+    pureMessage (WrittingMode horizontal vertical nfocus ) m =
+        msum [fmap resize (fromMessage m)
+             ,fmap incmastern (fromMessage m)]
+      where resize Shrink = WrittingMode horizontal (vertical * (8/9)) nfocus
+            resize Expand = WrittingMode horizontal (min 1 $ vertical * (9/8)) nfocus
+            incmastern (IncMasterN d) = WrittingMode horizontal vertical (max 1 (nfocus + d))
+
+runWritting :: Rational
+            -> Rational
+            -> [Window]
+            -> Int
+            -> Rectangle
+            -> [(Window, Rectangle)]
+runWritting scaleH scaleW windows nwindows (Rectangle ix iy iw ih) =
+  let
+    doScale start size scale = let
+         fsize = fromIntegral size
+       in (floor $ fsize * scale, floor $ fromIntegral start + (fsize * (1 - scale) / 2))
+    (h, y) = doScale iy ih scaleH
+    (w, x) = doScale ix iw scaleW
+    scaledrect = Rectangle x y w h
+    rects = splitHorizontally nwindows scaledrect
+  in
+     zip windows rects
 
 layoutWrapper :: (LayoutClass l Window) =>
                  l Window -> ModifiedLayout WithBorder (ModifiedLayout AvoidStruts l) Window
@@ -256,6 +303,7 @@ main = do
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
         , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -a")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
+        , ((mod4Mask, xK_w), setLayout $ Layout $ layoutWrapper $ defaultWrittingMode)
         , ((mod4Mask, xK_s), sendMessage $ ToggleStrut R)
         , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
         , ((0, 0x1008ff13), spawn "amixer -q set Master 5000+") --XF86AudioRaiseVolume
