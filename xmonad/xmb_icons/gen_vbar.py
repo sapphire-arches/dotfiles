@@ -1,5 +1,5 @@
 width = 8
-height = 12
+height = 24
 
 def gen_icon(i):
     # /* XPM */

@@ -147,7 +147,7 @@ withPip s = ModifiedLayout $ PictureInPicture s s
 withPipSeparate w h = ModifiedLayout $ PictureInPicture w h
 
 
-myLayoutHook = noBorders $ avoidStrutsOn [D] $ (bsplit
+myLayoutHook = noBorders $ avoidStrutsOn [D,U] $ (bsplit
                                              ||| Full
                                              ||| tiled
                                              ||| simplestFloat
