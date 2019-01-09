@@ -2,3 +2,4 @@
 .*.swp
 # Don't save vim spelling
 vim/spell
+vim/swap
