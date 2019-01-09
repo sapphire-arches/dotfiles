@@ -199,9 +199,9 @@ layoutWrapper :: (LayoutClass l Window) =>
                  l Window -> ModifiedLayout WithBorder (ModifiedLayout AvoidStruts l) Window
 layoutWrapper = noBorders . avoidStrutsOn [D,U]
 
-myLayoutHook = layoutWrapper (bsplit
-                             ||| Full
+myLayoutHook = layoutWrapper (Full
                              ||| tiled
+                             ||| bsplit
                              ||| simplestFloat
                              ||| withPip (1/3) bsplit
                              ||| withPipSeparate (2/3) (1/6) Full
