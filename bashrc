@@ -5,6 +5,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+[ ! -z $WINDOWID ] && transset-df -i $WINDOWID 0.9 > /dev/null
+
 . $HOME/.shell_config.sh
 
 #######################################

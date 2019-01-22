@@ -81,16 +81,6 @@ export EDITOR='vim'
 # Fix Java/XMonad being derpy as hell
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-#######################################
-#            PATH MODS                #
-#######################################
-
-export PYTHONPATH='/home/bob_twinkles/Code/python/thebigdb/thebigdb-python/'
-export PATH="$PATH:$HOME/.cabal/bin:$HOME/Scripts"
-export PATH="/usr/local/heroku/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/Scripts/overrides:$PATH"
-
 if [ -x $HOME/.local_config.sh ]
 then
   . $HOME/.local_config.sh
