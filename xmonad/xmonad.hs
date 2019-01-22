@@ -305,7 +305,7 @@ main = do
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
         , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -a")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
-        , ((mod4Mask, xK_w), setLayout $ Layout $ layoutWrapper $ defaultWrittingMode)
+        , ((mod4Mask, xK_f), setLayout $ Layout $ layoutWrapper $ defaultWrittingMode)
         , ((mod4Mask, xK_s), sendMessage $ ToggleStrut R)
         , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
         , ((0, 0x1008ff13), spawn "amixer -D pulse -q set Master 5000+") --XF86AudioRaiseVolume
