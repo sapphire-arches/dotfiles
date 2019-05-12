@@ -1,13 +1,13 @@
-       , bgColor = "#fdf6e3"
-       , fgColor = "#657b83"
 Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=7:antialias=true,Bitstream Vera Sans Mono:size=10:antialias=true"
+       , bgColor = "#282828"
+       , fgColor = "#b8b8b8"
        , position = BottomW L 100
        , lowerOnStart = True
        , iconRoot = "/home/bob_twinkles/.xmonad/xmb_icons/"
        , commands = [ Run MultiCpu ["-L","3"
                                    ,"-H","50"
-                                   ,"--normal","#859900"
-                                   ,"--high","#dc322f"
+                                   ,"--normal","#f7ca88" -- base0A
+                                   ,"--high","#ab4642"   -- base08
                                    ,"-t","\xf483<total> <autoipat>"
                                    ,"-p","3"
                                    ,"--"
@@ -20,19 +20,19 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=7:antialias=true,
                     , Run ThermalZone 0 ["-t","\xe780<temp>"] 30
                     , Run BatteryP ["AC", "AC0", "CMB1"]
                         [ "-L", "15"
-                        , "-l", "#dc322f"
-                        , "-H", "95"
-                        , "-h","#859900"
+                        , "-l", "#ab4642"  --base0A
+                        , "-H", "90"
+                        , "-h","#a1b46c"   --base0B
                         , "-t","<acstatus> <left>% <timeleft>"
                         , "--"
-                        , "-o", "<fc=#dc322f>\xf240</fc>"
-                        , "-O", "<fc=#dc322f>\xf1e6</fc>"
-                        , "-i", "<fc=#859900>\xf1e6</fc>"
-                        , "-p", "#859900"
+                        , "-o", "<fc=#ab4642>\xf240</fc>" -- base0A
+                        , "-O", "<fc=#ab4642>\xf1e6</fc>" -- base0A
+                        , "-i", "<fc=#a1b46c>\xf1e6</fc>" -- base0B
+                        , "-p", "#a1b46c"                 -- base0B
                         , "-f","AC/online"] 30
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% <fc=#cb4b16>%date%</fc> %battery%"
+       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% <fc=#b8b8b8>%date%</fc> %battery%"
        }

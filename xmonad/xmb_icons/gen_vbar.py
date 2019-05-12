@@ -1,6 +1,27 @@
 width = 8
 height = 24
 
+def split(c):
+    return ((c >> 16) & 0xFF, (c >> 8) & 0xff, c & 0xff)
+
+def mix_chan(a, b, f):
+    return int(b * f + a * (1.0 - f))
+
+def mix(a, b, f):
+    print(f)
+    (ra, ga, ba) = split(a)
+    (rb, gb, bb) = split(b)
+    r = mix_chan(ra, rb, f)
+    g = mix_chan(ga, gb, f)
+    b = mix_chan(ba, bb, f)
+    assert 0 <= r and r <= 0xff
+    assert 0 <= g and g <= 0xff
+    assert 0 <= b and b <= 0xff
+
+    print(r, g, b)
+
+    return (r << 16) | (g << 8) | b
+
 def gen_icon(i):
     # /* XPM */
     # static char *vbar_0[] = {
@@ -13,13 +34,22 @@ def gen_icon(i):
     # "separated by rows"
     # };
 
+    stops = [
+        0xb8b8b8, # base04
+        0xdc9656, # base09
+        0xab4642, # base08
+    ]
+
     name = 'vbar_%d' % i
-    if i < 2:
-        color = 0x000000
-    elif i < 4:
-        color = 0x85990
+    if i <= 4:
+        ni = i / 4.0
+        color = mix(stops[0], stops[1], ni)
     else:
-        color = 0xdc322f
+        ni = (i - 5) / 3.0
+        color = mix(stops[1], stops[2], ni)
+
+    print('{:x}'.format(color))
+
     with open(name + '.xpm', 'w') as outf:
         outf.write('/* XPM */\n')
         outf.write('static char *' + name + '[] = {\n')

@@ -28,6 +28,27 @@ import Data.Traversable (traverse, fmapDefault)
 import qualified XMonad.StackSet as W
 import Control.Monad.State.Lazy
 
+
+---------
+-- Colors
+---------
+base00 = "#181818"
+base01 = "#282828"
+base02 = "#383838"
+base03 = "#585858"
+base04 = "#b8b8b8"
+base05 = "#d8d8d8"
+base06 = "#e8e8e8"
+base07 = "#f8f8f8"
+base08 = "#ab4642"
+base09 = "#dc9656"
+base0A = "#f7ca88"
+base0B = "#a1b56c"
+base0C = "#86c1b9"
+base0D = "#7cafc2"
+base0E = "#ba8baf"
+base0F = "#a16946"
+
 ---------------------
 -- Random util stuff
 ---------------------
@@ -226,7 +247,7 @@ formatTitle maxLength t
 
 formatTitles :: Int -> Window -> [(Window, String)] -> String
 formatTitles maxLength focused = intercalate " | " . map doFormat
-    where doFormat (w, t) = (if w == focused then xmobarColor "#859900" "" else id)
+    where doFormat (w, t) = (if w == focused then xmobarColor base0B "" else id)
                                 (formatTitle maxLength t)
 
 listWindowTitles :: [Window] -> X [(Window, String)]
@@ -288,9 +309,9 @@ main = do
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
                         , ppSep = " \xb7 "
-                        , ppHidden = xmobarColor "#b58900" ""
-                        , ppCurrent = xmobarColor "#dc322f" ""
-                        , ppHiddenNoWindows = xmobarColor "#93a1a1" ""
+                        , ppHidden = xmobarColor base09 ""
+                        , ppCurrent = xmobarColor base08 ""
+                        , ppHiddenNoWindows = xmobarColor base02 ""
                         , ppExtras = [ logTitles ]
                         , ppLayout = (head . words)
                         , ppOrder = myPPOrder
