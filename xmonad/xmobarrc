@@ -1,6 +1,6 @@
-Config { font = "xft:Symbols Nerd Font:size=10:antialias=true,Bitstream Vera Sans Mono:size=10:antialias=true"
        , bgColor = "#fdf6e3"
        , fgColor = "#657b83"
+Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=7:antialias=true,Bitstream Vera Sans Mono:size=10:antialias=true"
        , position = BottomW L 100
        , lowerOnStart = True
        , iconRoot = "/home/bob_twinkles/.xmonad/xmb_icons/"
