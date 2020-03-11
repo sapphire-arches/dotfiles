@@ -3,7 +3,7 @@ static char *vbar_0[] = {
 /* columns rows colors chars-per-pixel */
 "8 24 2 1",
 "  c none",
-". c #000000",
+". c #b8b8b8",
 /* pixels */
 "        ",
 "        ",

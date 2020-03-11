@@ -39,6 +39,12 @@
 Xftantialias:           true
 Xft*hinting:            full
 
+dmenu*.background: base01
+dmenu*.foreground: base05
+dmenu*.selbackground: base02
+dmenu*.selforeground: base04
+dmenu*.font: xfg:UbuntuMono:size=11:weight=150
+
 URxvt*.depth:           32
 URxvt*.transparent:     false
 URxvt*scrollBar:        false
