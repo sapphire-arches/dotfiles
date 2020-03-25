@@ -13,3 +13,10 @@ set modeline
 nnoremap  <F3>     :noh<CR>
 "Make latex-suite use latex highlighting
 let g:tex_flavor='latex'
+
+" Keybinds for FZF
+map <leader>p  :FZF<CR>
+map <leader>s  :Rg <C-r><CR>
+map <leader>ss :Rr<space>
+map <leader>w  :Windows<CR>
+map <leader>b  :Buffers<CR>

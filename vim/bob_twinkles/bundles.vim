@@ -57,6 +57,9 @@ Plug 'christoomey/vim-sort-motion'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 
+Plug 'junegunn/fzf.vim'
+Plug '~/.nix-profile/share/vim-plugins/fzf/'
+
 call plug#end()
 
 " PlugCheck
