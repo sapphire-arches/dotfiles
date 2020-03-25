@@ -47,6 +47,9 @@ Plug 'godlygeek/csapprox'
 " postgresql syntax files
 Plug 'exu/pgsql.vim'
 
+" NixOS support
+Plug 'LnL7/vim-nix'
+
 " Sort motion
 Plug 'christoomey/vim-sort-motion'
 
