@@ -20,3 +20,11 @@ map <leader>s  :Rg <C-r><CR>
 map <leader>ss :Rr<space>
 map <leader>w  :Windows<CR>
 map <leader>b  :Buffers<CR>
+
+"
+" Use a separate directory for swap files and (persistent) undo
+"
+
+set directory=$HOME/.vim/swap//
+set undofile
+set undodir=$HOME/.vim/undo//
