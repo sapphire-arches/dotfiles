@@ -318,8 +318,8 @@ main = do
                         } >>
                     updatePointer (0.5, 0.5) (0.8, 0.8)
         , borderWidth = 2
-        , normalBorderColor  = "#268bd2"
-        , focusedBorderColor = "#dc322f"
+        , normalBorderColor  = base03
+        , focusedBorderColor = base05
         , workspaces = myWorkspaces
         } `additionalKeys`
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
