@@ -13,6 +13,7 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13:antialias=true
                                    ,"--"
                                    ,"--load-icon-pattern","<icon=vbar_%%.xpm/>"
                                    ,"--fallback-icon-pattern","<icon=vbar_%%.xpm/>"
+                                   ,"--contiguous-icons"
                                    ] 10
                     , Run Memory ["-p","3","-t","\xe266<usedratio>%"] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10

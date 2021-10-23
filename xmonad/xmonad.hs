@@ -293,7 +293,6 @@ myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "6", "7", "\xf001", "\xf
 main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
-    doStartup
     Main.xmobar 0 ".xmonad/xmobarrc" >>= (\x -> modifyIORef xmprocs ( x : ) )
     xmonad $ ewmh defaultConfig
         { terminal      = "urxvt"
@@ -305,6 +304,7 @@ main = do
                            setWMName "LG3D"
                            screens <- withDisplay getCleanedScreenInfo
                            bars <- io . sequence $ take ( ( length screens ) - 1 ) ( map (flip Main.xmobar ".xmonad/xmobar-secondaryrc") [1..] )
+                           io $ doStartup
                            io $ modifyIORef xmprocs ( bars ++ )
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
