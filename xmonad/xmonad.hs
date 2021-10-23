@@ -323,7 +323,7 @@ main = do
         , workspaces = myWorkspaces
         } `additionalKeys`
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
-        , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -a")
+        , ((controlMask, xK_Print), spawn "spectacle")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
         , ((mod4Mask, xK_f), setLayout $ Layout $ layoutWrapper $ defaultWrittingMode)
         , ((mod4Mask, xK_s), sendMessage $ ToggleStrut R)
