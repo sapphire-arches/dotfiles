@@ -12,7 +12,11 @@ import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.Loggers
 import XMonad.Util.NamedWindows (unName, getName)
+import XMonad.Layout.BorderResize
 import XMonad.Layout.Grid
+import XMonad.Layout.Gaps
+import XMonad.Layout.PositionStoreFloat
+import XMonad.Layout.HintedTile hiding (Tall)
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.OneBig
@@ -147,13 +151,14 @@ layoutWrapper :: (LayoutClass l Window) =>
                  l Window -> (ModifiedLayout AvoidStruts l) Window
 layoutWrapper = avoidStrutsOn [D,U]
 
-myLayoutHook = (layoutWrapper borderlessLayouts) ||| borderedLayouts where
+myLayoutHook = layoutWrapper (borderlessLayouts ||| borderedLayouts) where
                  borderlessLayouts = noBorders $
                         Full
                     ||| tiled
                     ||| OneBig (3/4) (3/4)
-                 borderedLayouts = simplestFloat
+                 borderedLayouts = simplestFloat ||| htile
                  tiled = Tall nmaster delta ratio
+                 htile = borderResize $ HintedTile nmaster delta ratio TopLeft Wide
                  nmaster = 1
                  delta = 3/100
                  ratio = 1/2
