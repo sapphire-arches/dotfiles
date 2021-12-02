@@ -84,10 +84,6 @@ function! FileTypeSpecialEnables()
     "We want to fold things syntax style for c files
     set foldmethod=syntax
 
-    if has('nvim')
-      " map Ycm's GoTo
-      nnoremap <leader>jd :YcmCompleter GoTo<cr>
-    endif
   elseif &ft == 'tex'
     "Do special things for tex files
     set wrap

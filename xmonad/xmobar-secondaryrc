@@ -1,13 +1,13 @@
-Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
-       , bgColor = "#fdf6e3"
-       , fgColor = "#657b83"
+Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13:antialias=true,Bitstream Vera Sans Mono:size=10:antialias=true"
+       , bgColor = "#282828"
+       , fgColor = "#b8b8b8"
        , position = BottomW L 100
        , lowerOnStart = True
-       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#859900","--high","#dc322f"] 10
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#f7ca88","--high","#ab4642" ] 10
                     , Run StdinReader
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     ]
        , alignSep = "}{"
-       , template = "%StdinReader%}{%memory% %cpu% <fc=#cb4b16>%date%</fc>"
+       , template = "%StdinReader%}{%memory% %cpu% <fc=#b8b8b8>%date%</fc>"
 }

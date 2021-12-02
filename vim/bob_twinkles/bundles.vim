@@ -31,12 +31,13 @@ Plug 'scrooloose/syntastic'
 Plug 'flazz/vim-colorschemes'
 Plug 'godlygeek/csapprox'
 
-" "
-" " assorted language plugins
-" "
-" Plug 'dart-lang/dart-vim-plugin.git'
+"
+" assorted language plugins
+"
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'ElmCast/elm-vim'
 " Plug 'derekwyatt/vim-scala.git'
-" 
+
 " " haskell pacakges
 " Plug 'bitc/vim-hdevtools'
 " Plug 'eagletmt/ghcmod-vim'
