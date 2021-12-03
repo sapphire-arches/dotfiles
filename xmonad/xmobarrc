@@ -19,7 +19,7 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13:antialias=true
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     , Run Com "/home/bob_twinkles/.xmonad/volume.sh" [] "volume" 30
                     , Run ThermalZone 0 ["-t","\xe780<temp>"] 30
-                    , Run BatteryP ["AC", "AC0", "CMB1"]
+                    , Run BatteryP ["AC", "AC0", "CMB1", "BAT1"]
                         [ "-L", "15"
                         , "-l", "#ab4642"  --base0A
                         , "-H", "90"
@@ -35,5 +35,5 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13:antialias=true
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% %volume% <fc=#cb4b16>%date%</fc>"
+       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% <fc=#cb4b16>%date%</fc> %battery%"
        }
