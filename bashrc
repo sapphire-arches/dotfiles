@@ -104,7 +104,7 @@ function __prompt_cmd {
     fi
     if [ ! -z ${IN_NIX_SHELL} ]
     then
-      PS1+=" ${txtcyn}(NIX-SHELL $$)${txtrst}"
+      PS1+=" ${txtcyn}(NIX-SHELL $$|${name})${txtrst}"
     fi
     # Second line
     PS1+="\n${tr}"
