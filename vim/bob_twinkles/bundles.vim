@@ -48,12 +48,18 @@ Plug 'ElmCast/elm-vim'
 " postgresql syntax files
 Plug 'exu/pgsql.vim'
 
+" NixOS support
+Plug 'LnL7/vim-nix'
+
 " Sort motion
 Plug 'christoomey/vim-sort-motion'
 
 " Surround stuff
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+
+Plug 'junegunn/fzf.vim'
+Plug '~/.nix-profile/share/vim-plugins/fzf/'
 
 call plug#end()
 

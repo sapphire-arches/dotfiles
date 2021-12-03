@@ -12,7 +12,11 @@ import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.Loggers
 import XMonad.Util.NamedWindows (unName, getName)
+import XMonad.Layout.BorderResize
 import XMonad.Layout.Grid
+import XMonad.Layout.Gaps
+import XMonad.Layout.PositionStoreFloat
+import XMonad.Layout.HintedTile hiding (Tall)
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders
 import XMonad.Layout.OneBig
@@ -93,80 +97,6 @@ myManageHook = floatTitleHook <+> composeAll
 ------------------------Custom layout classes----------------------------------
 -------------------------------------------------------------------------------
 
--- Thanks to sjdrodge for his help with making a less derpy implementation of
--- the layout mode
-
-padRect :: Int -> Rectangle -> Rectangle
-padRect padding (Rectangle x y w h) =
-     let pp = fromIntegral padding -- position padding is a different type than
-         pd = fromIntegral padding -- width padding
-     in Rectangle ( x + pp ) ( y + pp ) ( w - ( 2 * pd ) ) ( h - ( 2 * pd ) )
-
--- Takes the current index, total number of rectangles, and the current
--- rectangle and a padding value. Returns a list of rectangles
-bspSplit :: Int -> Int -> Rectangle -> [Rectangle]
-bspSplit c n rec
-    | c == n - 1 = [rec]
-    | side <  2  = x : next y
-    | otherwise  = y : next x
-        where
-         side = c `rem` 4
-         next = bspSplit (c + 1) n
-         (x:y:ys) = (if even side then splitHorizontally else splitVertically) 2 rec
-
-data BinarySplit a = BinarySplit { spacing      :: Int
-                                 , spacingDelta :: Int } deriving ( Read, Show )
-instance LayoutClass BinarySplit a where
-    pureLayout (BinarySplit spacing spacingDelta) rectangle stack = zip windows rectangles
-     where
-        windows = W.integrate stack
-        numWindows = length windows
-        rectangles = map ( padRect spacing ) ( bspSplit 0 numWindows rectangle )
-
-    pureMessage (BinarySplit spacing spacingDelta) m =
-        msum [fmap resize (fromMessage m)]
-      where resize Shrink = BinarySplit ( max 0 $ spacing - spacingDelta ) spacingDelta
-            resize Expand = BinarySplit ( spacing + spacingDelta ) spacingDelta
-
----------------
--- PiP class --
----------------
-
-makeInsetRect (Rectangle x y w h) sw sh = Rectangle x y ow oh
-    where ow = floor $ fromIntegral w * sw
-          oh = floor $ fromIntegral h * sh
-
-data PictureInPicture a = PictureInPicture {
-    insetScaleWidth :: Rational,
-    insetScaleHeight :: Rational
-} deriving (Read, Show)
-
-instance LayoutModifier PictureInPicture Window where
-    modifyLayout (PictureInPicture wr hr) = runPip wr hr
-    modifierDescription = show
-
-runPip :: (LayoutClass l Window) =>
-                Rational
-             -> Rational
-             -> W.Workspace WorkspaceId (l Window) Window
-             -> Rectangle
-             -> X ([(Window, Rectangle)], Maybe (l Window))
-runPip scaleW scaleH wksp rect = do
-    let stack = W.stack wksp
-    let ws = W.integrate' stack
-    let (inset, rest) = safeSplit ws
-    case inset of
-        Just insetWin -> do
-            let filteredStack = stack >>= W.filter (insetWin /=)
-            let pipRect = makeInsetRect rect scaleW scaleH
-            wrs <- runLayout (wksp {W.stack = filteredStack}) rect
-            return ((insetWin, pipRect) : fst wrs, snd wrs)
-        Nothing -> runLayout wksp rect
-
-
-withPip s = ModifiedLayout $ PictureInPicture s s
-withPipSeparate w h = ModifiedLayout $ PictureInPicture w h
-
 ------------------------------
 -- Writing mode layout hook --
 ------------------------------
@@ -218,19 +148,17 @@ runWritting fracH fracV windows nwindows (Rectangle ix iy iw ih) =
      zip windows rects
 
 layoutWrapper :: (LayoutClass l Window) =>
-                 l Window -> ModifiedLayout WithBorder (ModifiedLayout AvoidStruts l) Window
-layoutWrapper = noBorders . avoidStrutsOn [D,U]
+                 l Window -> (ModifiedLayout AvoidStruts l) Window
+layoutWrapper = avoidStrutsOn [D,U]
 
-myLayoutHook = layoutWrapper (Full
-                             ||| tiled
-                             ||| bsplit
-                             ||| simplestFloat
-                             ||| withPip (1/3) bsplit
-                             ||| withPipSeparate (2/3) (1/6) Full
-                             ||| Mirror tiled
-                             ||| OneBig (3/4) (3/4)) where
-                 bsplit = BinarySplit 8 6
+myLayoutHook = layoutWrapper (borderlessLayouts ||| borderedLayouts) where
+                 borderlessLayouts = noBorders $
+                        Full
+                    ||| tiled
+                    ||| OneBig (3/4) (3/4)
+                 borderedLayouts = simplestFloat ||| htile
                  tiled = Tall nmaster delta ratio
+                 htile = borderResize $ HintedTile nmaster delta ratio TopLeft Wide
                  nmaster = 1
                  delta = 3/100
                  ratio = 1/2
@@ -293,7 +221,6 @@ myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "6", "7", "\xf001", "\xf
 main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
-    doStartup
     Main.xmobar 0 ".xmonad/xmobarrc" >>= (\x -> modifyIORef xmprocs ( x : ) )
     xmonad $ ewmh defaultConfig
         { terminal      = "urxvt"
@@ -305,6 +232,7 @@ main = do
                            setWMName "LG3D"
                            screens <- withDisplay getCleanedScreenInfo
                            bars <- io . sequence $ take ( ( length screens ) - 1 ) ( map (flip Main.xmobar ".xmonad/xmobar-secondaryrc") [1..] )
+                           io $ doStartup
                            io $ modifyIORef xmprocs ( bars ++ )
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
@@ -318,17 +246,17 @@ main = do
                         } >>
                     updatePointer (0.5, 0.5) (0.8, 0.8)
         , borderWidth = 2
-        , normalBorderColor  = "#268bd2"
-        , focusedBorderColor = "#dc322f"
+        , normalBorderColor  = base03
+        , focusedBorderColor = base05
         , workspaces = myWorkspaces
         } `additionalKeys`
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
-        , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -a")
+        , ((controlMask, xK_Print), spawn "spectacle")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
         , ((mod4Mask, xK_f), setLayout $ Layout $ layoutWrapper $ defaultWrittingMode)
         , ((mod4Mask, xK_s), sendMessage $ ToggleStrut R)
         , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
-        , ((0, 0x1008ff13), spawn "amixer -q set Master 5000+") --XF86AudioRaiseVolume
-        , ((0, 0x1008ff11), spawn "amixer -q set Master 5000-") --XF86AudioLowerVolume
-        , ((0, 0x1008ff12), spawn "amixer -q set Master toggle") --XF86AudioMute
+        , ((0, 0x1008ff13), spawn "amixer -D pulse -q set Master 5000+") --XF86AudioRaiseVolume
+        , ((0, 0x1008ff11), spawn "amixer -D pulse -q set Master 5000-") --XF86AudioLowerVolume
+        , ((0, 0x1008ff12), spawn "amixer -D pulse -q set Master toggle") --XF86AudioMute
         ]

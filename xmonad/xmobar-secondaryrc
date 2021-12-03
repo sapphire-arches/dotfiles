@@ -3,11 +3,20 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13:antialias=true
        , fgColor = "#b8b8b8"
        , position = BottomW L 100
        , lowerOnStart = True
-       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#f7ca88","--high","#ab4642" ] 10
-                    , Run StdinReader
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+       , commands = [ Run MultiCpu ["-L","3"
+                                   ,"-H","50"
+                                   ,"--normal","#f7ca88" -- base0A
+                                   ,"--high","#ab4642"   -- base08
+                                   ,"-t","\xf483<total> <autoipat>"
+                                   ,"-p","3"
+                                   ,"--"
+                                   ,"--load-icon-pattern","<icon=vbar_%%.xpm/>"
+                                   ,"--fallback-icon-pattern","<icon=vbar_%%.xpm/>"
+                                   ] 10
+                    , Run Memory ["-p","3","-t","\xe266<usedratio>%"] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10
+                    , Run StdinReader
                     ]
        , alignSep = "}{"
-       , template = "%StdinReader%}{%memory% %cpu% <fc=#b8b8b8>%date%</fc>"
+       , template = "%StdinReader%}{%memory% %multicpu% <fc=#cb4b16>%date%</fc>"
 }

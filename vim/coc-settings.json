@@ -18,5 +18,8 @@
       "initializationOptions": {
       }
     }
+  },
+  "rust-analyzer": {
+    "serverPath": "/home/bob_twinkles/.nix-profile/bin/rust-analyzer"
   }
 }

@@ -3,3 +3,4 @@
 # Don't save vim spelling
 vim/spell
 vim/swap
+vim/undo

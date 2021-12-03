@@ -35,5 +35,5 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13,xft:Bitstream 
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% <fc=#b8b8b8>%date%</fc> %battery%"
+       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% %volume% <fc=#cb4b16>%date%</fc>"
        }

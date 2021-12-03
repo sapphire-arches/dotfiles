@@ -5,6 +5,10 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+[ ! -z $WINDOWID ] && \
+  which transset-df 2>/dev/null >/dev/null && \
+  transset-df -i $WINDOWID 0.9 > /dev/null
+
 . $HOME/.shell_config.sh
 
 #######################################
@@ -98,6 +102,10 @@ function __prompt_cmd {
       venv_relpath=$(python -c "import os.path; print(os.path.relpath('${VIRTUAL_ENV}', '$(pwd)'))")
       PS1+=" (${venv_relpath})"
     fi
+    if [ ! -z ${IN_NIX_SHELL} ]
+    then
+      PS1+=" ${txtcyn}(NIX-SHELL $$)${txtrst}"
+    fi
     # Second line
     PS1+="\n${tr}"
     if [ $EXIT != "0" ]
@@ -111,5 +119,11 @@ function __prompt_cmd {
     export PS1="[${pnjobs}][${puser}@${phost} ${ppath}] \$ "
   fi
 }
+
+if [ -f ~/.nix-profile/share/fzf/key-bindings.bash ]
+then
+  source ~/.nix-profile/share/fzf/key-bindings.bash
+  source ~/.nix-profile/share/fzf/completion.bash
+fi
 
 export PROMPT_COMMAND=__prompt_cmd
