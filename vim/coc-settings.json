@@ -20,6 +20,6 @@
     }
   },
   "rust-analyzer": {
-    "serverPath": "/home/bob_twinkles/.nix-profile/bin/rust-analyzer"
+    "serverPath": "/home/bob_twinkles/.vim/bin/rust-analyzer-from-path.sh"
   }
 }
