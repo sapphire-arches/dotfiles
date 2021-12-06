@@ -152,11 +152,11 @@ layoutWrapper :: (LayoutClass l Window) =>
 layoutWrapper = avoidStrutsOn [D,U]
 
 myLayoutHook = layoutWrapper (borderlessLayouts ||| borderedLayouts) where
-                 borderlessLayouts = noBorders $
-                        Full
-                    ||| tiled
+                 borderlessLayouts = noBorders $ Full
+                 borderedLayouts = tiled
+                    ||| htile
+                    ||| simplestFloat
                     ||| OneBig (3/4) (3/4)
-                 borderedLayouts = simplestFloat ||| htile
                  tiled = Tall nmaster delta ratio
                  htile = borderResize $ HintedTile nmaster delta ratio TopLeft Wide
                  nmaster = 1
@@ -245,7 +245,7 @@ main = do
                         , ppOrder = myPPOrder
                         } >>
                     updatePointer (0.5, 0.5) (0.8, 0.8)
-        , borderWidth = 2
+        , borderWidth = 1
         , normalBorderColor  = base03
         , focusedBorderColor = base05
         , workspaces = myWorkspaces
