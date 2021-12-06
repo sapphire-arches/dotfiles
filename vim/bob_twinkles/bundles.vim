@@ -50,6 +50,9 @@ Plug 'exu/pgsql.vim'
 " NixOS support
 Plug 'LnL7/vim-nix'
 
+" Liberty files
+Plug 'tarikgraba/vim-liberty'
+
 " Sort motion
 Plug 'christoomey/vim-sort-motion'
 
