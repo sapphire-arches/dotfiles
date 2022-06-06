@@ -6,8 +6,8 @@
 [[ $- != *i* ]] && return
 
 [ ! -z $WINDOWID ] && \
-  which transset-df 2>/dev/null >/dev/null && \
-  transset-df -i $WINDOWID 0.9 > /dev/null
+  which transset 2>/dev/null >/dev/null && \
+  transset -i $WINDOWID 0.95 > /dev/null
 
 . $HOME/.shell_config.sh
 
