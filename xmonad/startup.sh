@@ -12,3 +12,4 @@ xcompmgr &
 xsetroot -cursor_name left_ptr
 hsetroot -solid '#4f4444'
 feh --bg-fill -z ~/Wallpapers/*
+obsidian &

@@ -88,6 +88,7 @@ myManageHook = floatTitleHook <+> composeAll
     , className =? "Steam"          --> doShift "9"
     , className =? "Skype"          --> doShift "8"
     , className =? "MPlayer"        --> (ask >>= doF . W.sink)
+    , className =? "obsidian"       --> doShift "7"
     , className =? "sun-awt-X11-XFramePeer" --> doIgnore
     , isFullscreen                  --> doFullFloat
     , manageDocks
