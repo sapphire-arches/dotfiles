@@ -76,7 +76,7 @@ alias bc='bc -l'
 #           PREFERENCES               #
 #######################################
 export MANPAGER=most
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Fix Java/XMonad being derpy as hell
 export _JAVA_AWT_WM_NONREPARENTING=1
