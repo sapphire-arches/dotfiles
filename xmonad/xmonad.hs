@@ -31,6 +31,7 @@ import Data.Maybe
 import Data.Traversable (traverse, fmapDefault)
 import qualified XMonad.StackSet as W
 import Control.Monad.State.Lazy
+import Network.HostName (getHostName)
 
 
 ---------
@@ -222,7 +223,8 @@ myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "6", "7", "\xf001", "\xf
 main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
-    Main.xmobar 0 ".xmonad/xmobarrc" >>= (\x -> modifyIORef xmprocs ( x : ) )
+    hostname <- getHostName
+    Main.xmobar 0 (".xmonad/xmobarrc." ++ hostname) >>= (\x -> modifyIORef xmprocs ( x : ) )
     xmonad $ (docks . ewmh) $ def
         { terminal      = "urxvt"
         , manageHook = myManageHook <+> manageHook def
