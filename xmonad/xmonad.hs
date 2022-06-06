@@ -10,7 +10,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
-import XMonad.Util.Loggers
+import XMonad.Util.Loggers hiding (logTitles)
 import XMonad.Util.NamedWindows (unName, getName)
 import XMonad.Layout.BorderResize
 import XMonad.Layout.Grid
@@ -223,14 +223,12 @@ main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
     Main.xmobar 0 ".xmonad/xmobarrc" >>= (\x -> modifyIORef xmprocs ( x : ) )
-    xmonad $ ewmh defaultConfig
+    xmonad $ (docks . ewmh) $ def
         { terminal      = "urxvt"
-        , manageHook = myManageHook <+> manageHook defaultConfig
-        , handleEventHook = docksEventHook
+        , manageHook = myManageHook <+> manageHook def
         , layoutHook = myLayoutHook
         , modMask = mod4Mask
-        , startupHook = do ewmhDesktopsStartup
-                           setWMName "LG3D"
+        , startupHook = do setWMName "LG3D"
                            screens <- withDisplay getCleanedScreenInfo
                            bars <- io . sequence $ take ( ( length screens ) - 1 ) ( map (flip Main.xmobar ".xmonad/xmobar-secondaryrc") [1..] )
                            io $ doStartup
