@@ -126,4 +126,6 @@ then
   source ~/.nix-profile/share/fzf/completion.bash
 fi
 
+export HISTFILESIZE=2500
+
 export PROMPT_COMMAND=__prompt_cmd
