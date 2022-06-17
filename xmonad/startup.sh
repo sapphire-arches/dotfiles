@@ -4,18 +4,33 @@ export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS="@im=fcitx"
 
-if [[ $(hostname) -eq "carrot-cake" ]]
-then
-  # carrot-cake only xrandr setup
-  xrandr --output HDMI-0 --left-of DP-1
-fi
+hostname=$(hostname)
+
+start_if_not_running() {
+  if ! (ps -ax | grep $1 | grep -v grep)
+  then
+    $@ &
+  fi
+}
+
+case $(hostname) in
+  "carrot-cake")
+    # carrot-cake only xrandr setup
+    xrandr --output HDMI-0 --left-of DP-1
+    ;;
+  "smith-island")
+    start_if_not_running trayer --edge right --widthtype request --align right &
+    ;;
+  *)
+    ;;
+esac
 
 fcitx &
 xmodmap ~/.xmodmap
 xrdb -merge ~/.Xresources
-xscreensaver -no-splash &
-xcompmgr &
 xsetroot -cursor_name left_ptr
 hsetroot -solid '#4f4444'
 feh --bg-fill -z ~/Wallpapers/*
-obsidian &
+start_if_not_running xscreensaver -no-splash &
+start_if_not_running xcompmgr &
+start_if_not_running obsidian &
