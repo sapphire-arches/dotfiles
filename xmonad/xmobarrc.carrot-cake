@@ -19,9 +19,9 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13:antialias=true
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     , Run Com "/home/bob_twinkles/.xmonad/volume.sh" [] "volume" 30
                     , Run MultiCoreTemp ["-t","\xe780<max>", "--", "--hwmon-path", "/sys/class/hwmon/hwmon1/"] 30
-                    , Run StdinReader
+                    , Run XMonadLog
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%multicoretemp% %multicpu% %memory% <fc=#cb4b16>%date%</fc>"
+       , template = "%XMonadLog%}{%multicoretemp% %multicpu% %memory% <fc=#cb4b16>%date%</fc>"
        }

@@ -35,10 +35,10 @@ Config { font = "xft:BitstreamVeraSansMono Nerd Font Mono:size=13:antialias=true
                         [ "-c"
                         , "nmcli -t connection show --active | grep wireless | cut -d : -f 1"
                         ] "wificonn" 600
-                    , Run StdinReader
+                    , Run XMonadLog
                     , Run Com "/home/bob_twinkles/.xmonad/padding-icon.sh" ["panel"] "trayerpad" 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%}{%thermal0% %multicpu% %memory% %wificonn% <fc=#cb4b16>%date%</fc> %battery% %trayerpad%"
+       , template = "%XMonadLog%}{%thermal0% %multicpu% %memory% %wificonn% <fc=#cb4b16>%date%</fc> %battery% %trayerpad%"
        }

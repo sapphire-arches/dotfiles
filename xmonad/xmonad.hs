@@ -3,7 +3,8 @@ import XMonad
 import XMonad.Actions.UpdatePointer(updatePointer)
 import XMonad.Core
 import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
@@ -62,12 +63,11 @@ safeSplit :: [a] -> (Maybe a, [a])
 safeSplit []     = (Nothing, [])
 safeSplit (x:xs) = (Just x, xs)
 
--- Starts an xmobar on a specified screen
-xmobar :: Int -> String -> IO (Handle)
-xmobar screen config = spawnPipe . intercalate " " $ options
+-- Construct an xmobar startup command
+xmobar :: ScreenId -> String -> String
+xmobar (S screen) config = intercalate " " $ options
     where options = [ "xmobar"
-                     , "-x"
-                     , show screen
+                     , "--screen=" ++ (show screen)
                      , show config
                      ]
 
@@ -149,31 +149,29 @@ runWritting fracH fracV windows nwindows (Rectangle ix iy iw ih) =
   in
      zip windows rects
 
-layoutWrapper :: (LayoutClass l Window) =>
-                 l Window -> (ModifiedLayout AvoidStruts l) Window
-layoutWrapper = avoidStrutsOn [D,U]
-
-myLayoutHook = layoutWrapper (borderlessLayouts ||| borderedLayouts) where
-                 borderlessLayouts = noBorders $ Full
-                 borderedLayouts = tiled
-                    ||| htile
-                    ||| simplestFloat
-                    ||| OneBig (3/4) (3/4)
-                 tiled = Tall nmaster delta ratio
-                 htile = borderResize $ HintedTile nmaster delta ratio TopLeft Wide
-                 nmaster = 1
-                 delta = 3/100
-                 ratio = 1/2
+myLayoutHook = avoidStrutsOn [D,U] (borderlessLayouts ||| borderedLayouts)
+    where
+        borderlessLayouts = noBorders $ Full
+        borderedLayouts = tiled
+           ||| htile
+           ||| simplestFloat
+           ||| OneBig (3/4) (3/4)
+        tiled = Tall nmaster delta ratio
+        htile = borderResize $ HintedTile nmaster delta ratio TopLeft Wide
+        nmaster = 1
+        delta = 3/100
+        ratio = 1/2
 
 -- XMobar output stuff
 myTitleLength = 100
 
 formatTitle :: Int -> String -> String
-formatTitle maxLength t
-    | len <  maxLength = t
-    | len == maxLength = t
-    | len >  maxLength = shorten maxLength t
-    where len = length t;
+formatTitle _ s = s
+-- formatTitle maxLength t
+--     | len <  maxLength = t
+--     | len == maxLength = t
+--     | len >  maxLength = shortenL maxLength t
+--     where len = length t;
 
 formatTitles :: Int -> Window -> [(Window, String)] -> String
 formatTitles maxLength focused = intercalate " | " . map doFormat
@@ -212,11 +210,32 @@ myPPOrder xs =
         (a, b) = splitAt 2 xs
     in a ++ drop 1 b
 
+-- Run startup script
 doStartup :: IO ProcessHandle
 doStartup = do
     (_, _, _, handle) <- createProcess $ shell "~/.xmonad/startup.sh"
     return handle
 
+mySB :: ScreenId -> String -> StatusBarConfig
+mySB screen hostname = statusBarProp (Main.xmobar screen configFile) pps
+    where
+        configFile = (".xmonad/xmobarrc." ++ hostname)
+        xmobarPPCfg = def
+          { ppSep = " \xb7 "
+          , ppHidden = xmobarColor base09 ""
+          , ppCurrent = xmobarColor base08 ""
+          , ppHiddenNoWindows = xmobarColor base02 ""
+          , ppExtras = [ logTitles ]
+          , ppLayout = (head . words)
+          , ppOrder = myPPOrder
+          , ppVisible = id
+          }
+        pps = (pure xmobarPPCfg)
+
+barSpawner :: String -> ScreenId -> IO StatusBarConfig
+barSpawner hostname i = pure $ mySB i hostname
+
+myWorkspaces :: [String]
 myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "6", "7", "\xf001", "\xf1d7"]
 
 -- And the main config
@@ -224,28 +243,14 @@ main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
     hostname <- getHostName
-    Main.xmobar 0 (".xmonad/xmobarrc." ++ hostname) >>= (\x -> modifyIORef xmprocs ( x : ) )
-    xmonad $ (docks . ewmh) $ def
-        { terminal      = "urxvt"
-        , manageHook = myManageHook <+> manageHook def
-        , layoutHook = myLayoutHook
-        , modMask = mod4Mask
+    xmonad $ (docks . ewmh . (dynamicSBs (barSpawner hostname))) $ def
+        { terminal    = "urxvt"
+        , manageHook  = myManageHook <+> manageHook def
+        , layoutHook  = myLayoutHook
+        , modMask     = mod4Mask
         , startupHook = do setWMName "LG3D"
-                           screens <- withDisplay getCleanedScreenInfo
-                           bars <- io . sequence $ take ( ( length screens ) - 1 ) ( map (flip Main.xmobar ".xmonad/xmobar-secondaryrc") [1..] )
                            io $ doStartup
-                           io $ modifyIORef xmprocs ( bars ++ )
-        , logHook = dynamicLogWithPP xmobarPP
-                        { ppOutput = (\x -> readIORef xmprocs >>= flip writeHandles x)
-                        , ppSep = " \xb7 "
-                        , ppHidden = xmobarColor base09 ""
-                        , ppCurrent = xmobarColor base08 ""
-                        , ppHiddenNoWindows = xmobarColor base02 ""
-                        , ppExtras = [ logTitles ]
-                        , ppLayout = (head . words)
-                        , ppOrder = myPPOrder
-                        } >>
-                    updatePointer (0.5, 0.5) (0.8, 0.8)
+                           return ()
         , borderWidth = 1
         , normalBorderColor  = base03
         , focusedBorderColor = base05
@@ -254,7 +259,6 @@ main = do
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
         , ((controlMask, xK_Print), spawn "spectacle")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
-        , ((mod4Mask, xK_f), setLayout $ Layout $ layoutWrapper $ defaultWrittingMode)
         , ((mod4Mask, xK_s), sendMessage $ ToggleStrut R)
         , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
         , ((0, 0x1008ff13), spawn "amixer -D pulse -q set Master 5000+") --XF86AudioRaiseVolume
