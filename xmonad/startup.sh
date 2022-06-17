@@ -7,7 +7,7 @@ export XMODIFIERS="@im=fcitx"
 hostname=$(hostname)
 
 start_if_not_running() {
-  if ! (ps -ax | grep $1 | grep -v grep)
+  if ! (ps -ax | grep $1 | grep -v grep > /dev/null)
   then
     $@ &
   fi
@@ -29,7 +29,6 @@ fcitx &
 xmodmap ~/.xmodmap
 xrdb -merge ~/.Xresources
 xsetroot -cursor_name left_ptr
-hsetroot -solid '#4f4444'
 feh --bg-fill -z ~/Wallpapers/*
 start_if_not_running xscreensaver -no-splash &
 start_if_not_running xcompmgr &
