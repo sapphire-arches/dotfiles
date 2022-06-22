@@ -19,7 +19,7 @@ case $(hostname) in
     xrandr --output HDMI-0 --left-of DP-1
     ;;
   "smith-island")
-    start_if_not_running trayer --edge right --widthtype request --align right &
+    start_if_not_running trayer --height 26 --heighttype pixel --edge bottom --widthtype request --align right &
     ;;
   *)
     ;;
