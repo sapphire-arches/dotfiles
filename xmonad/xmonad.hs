@@ -251,6 +251,7 @@ main = do
         , startupHook = do setWMName "LG3D"
                            io $ doStartup
                            return ()
+        , logHook     = updatePointer (0.5, 0.5) (0.8, 0.8)
         , borderWidth = 1
         , normalBorderColor  = base03
         , focusedBorderColor = base05
