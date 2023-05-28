@@ -1,4 +1,4 @@
-Config { font = "BitstreamVeraSansMono Nerd Font Mono 11"
+Config { font = "xft:BitstromWera Nerd Font 9"
        , bgColor = "#282828"
        , fgColor = "#b8b8b8"
        , position = BottomW L 100
