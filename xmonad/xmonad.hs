@@ -11,7 +11,7 @@ import XMonad.Hooks.SetWMName
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
-import XMonad.Util.Loggers hiding (logTitles)
+import XMonad.Util.Loggers
 import XMonad.Util.NamedWindows (unName, getName)
 import XMonad.Layout.BorderResize
 import XMonad.Layout.Grid
@@ -182,23 +182,6 @@ listWindowTitles :: [Window] -> X [(Window, String)]
 listWindowTitles = traverse (fmap getTitle . getName)
     where getTitle w = (unName w, show w)
 
-logTitles :: X ( Maybe String )
-logTitles = withWindowSet $ formatStackSet
-    where
-        formatStackSet :: WindowSet -> X (Maybe String)
-        formatStackSet s =
-            let
-                windows       = W.index s
-                titles        = listWindowTitles windows
-            -- Outer fmap is to extract titles, since that needs to be in the X monad
-            in fmap (\wintitles -> fmap (\focused ->
-                -- Inner fmap is just convenience over Maybe
-                let
-                    numWindows    = length windows
-                    desiredLength = min (quot 200 numWindows) myTitleLength
-                in formatTitles desiredLength focused wintitles) (W.peek s)
-            ) titles
-
 -- Utility function for setting the font
 xmobarFont :: Int -> String -> String
 xmobarFont i = wrap (concat ["<fn=", show i, ">"]) "</fn>"
@@ -220,12 +203,14 @@ mySB :: ScreenId -> String -> StatusBarConfig
 mySB screen hostname = statusBarProp (Main.xmobar screen configFile) pps
     where
         configFile = (".xmonad/xmobarrc." ++ hostname)
+        formatFocused   = wrap "[" "]" . xmobarColor base09 "" . shorten 50 . xmobarStrip
+        formatUnfocused = wrap "(" ")" . shorten 30 . xmobarStrip
         xmobarPPCfg = def
           { ppSep = " \xb7 "
           , ppHidden = xmobarColor base09 ""
           , ppCurrent = xmobarColor base08 ""
           , ppHiddenNoWindows = xmobarColor base02 ""
-          , ppExtras = [ logTitles ]
+          , ppExtras = [ logTitles formatFocused formatUnfocused ]
           , ppLayout = (head . words)
           , ppOrder = myPPOrder
           , ppVisible = id
@@ -252,7 +237,7 @@ main = do
                            io $ doStartup
                            return ()
         , logHook     = updatePointer (0.5, 0.5) (0.8, 0.8)
-        , borderWidth = 1
+        , borderWidth = 0
         , normalBorderColor  = base03
         , focusedBorderColor = base05
         , workspaces = myWorkspaces
