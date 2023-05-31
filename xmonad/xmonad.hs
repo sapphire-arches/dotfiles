@@ -221,7 +221,8 @@ myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "\xf0296", "\xf039a", "\
 
 toggleStruts :: X ()
 toggleStruts = do
-  sendMessage ToggleStruts
+  broadcastMessage ToggleStruts
+  refresh
   safeSpawn ".config/eww/bar/scripts/toggle" []
 
 -- And the main config
@@ -238,7 +239,7 @@ main = do
                            io $ doStartup
                            return ()
         , logHook     = updatePointer (0.5, 0.5) (0.8, 0.8)
-        , borderWidth = 0
+        , borderWidth = 1
         , normalBorderColor  = base03
         , focusedBorderColor = base05
         , workspaces = myWorkspaces
