@@ -35,3 +35,4 @@ start_if_not_running xcompmgr &
 start_if_not_running obsidian &
 
 eww -c ~/.config/eww/bar open bar
+eww -c ~/.config/eww/bar update visible=true
