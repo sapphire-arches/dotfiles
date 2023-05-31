@@ -8,7 +8,7 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
-import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.Run(spawnPipe, safeSpawn)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.Loggers
@@ -149,7 +149,7 @@ runWritting fracH fracV windows nwindows (Rectangle ix iy iw ih) =
   in
      zip windows rects
 
-myLayoutHook = avoidStrutsOn [D,U] (borderlessLayouts ||| borderedLayouts)
+myLayoutHook = avoidStrutsOn [L,R,D,U] (borderlessLayouts ||| borderedLayouts)
     where
         borderlessLayouts = noBorders $ Full
         borderedLayouts = tiled
@@ -182,10 +182,6 @@ listWindowTitles :: [Window] -> X [(Window, String)]
 listWindowTitles = traverse (fmap getTitle . getName)
     where getTitle w = (unName w, show w)
 
--- Utility function for setting the font
-xmobarFont :: Int -> String -> String
-xmobarFont i = wrap (concat ["<fn=", show i, ">"]) "</fn>"
-
 -- We get the strings in the order: [workspace, layout, current, .. ppExtras ..]
 myPPOrder:: [String] -> [String]
 myPPOrder xs =
@@ -200,20 +196,22 @@ doStartup = do
     return handle
 
 mySB :: ScreenId -> String -> StatusBarConfig
-mySB screen hostname = statusBarProp (Main.xmobar screen configFile) pps
+mySB screen hostname = statusBarProp ("sleep 1") pps
     where
         configFile = (".xmonad/xmobarrc." ++ hostname)
-        formatFocused   = wrap "[" "]" . xmobarColor base09 "" . shorten 50 . xmobarStrip
-        formatUnfocused = wrap "(" ")" . shorten 30 . xmobarStrip
+        quote = wrap "\"" "\""
+        box cls content = concat [ "(box :class \"", cls, "\" ", content , ")" ]
+        formatFocused   _ = box "window-focused" "\"\xea71\""
+        formatUnfocused _ = box "window-unfocused" "\"\xeabc\""
         xmobarPPCfg = def
-          { ppSep = " \xb7 "
-          , ppHidden = xmobarColor base09 ""
-          , ppCurrent = xmobarColor base08 ""
-          , ppHiddenNoWindows = xmobarColor base02 ""
-          , ppExtras = [ logTitles formatFocused formatUnfocused ]
-          , ppLayout = (head . words)
+          { ppSep = ""
+          , ppHidden = box "ws-hidden" . quote
+          , ppCurrent = box "ws-current" . quote
+          , ppVisible = box "ws-visible" . quote
+          , ppHiddenNoWindows = box "ws-hidden-no-window" . quote
+          , ppLayout = box "layout-name" . quote . singleton . head
           , ppOrder = myPPOrder
-          , ppVisible = id
+          , ppExtras = [ logTitles formatFocused formatUnfocused ]
           }
         pps = (pure xmobarPPCfg)
 
@@ -222,6 +220,11 @@ barSpawner hostname i = pure $ mySB i hostname
 
 myWorkspaces :: [String]
 myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "6", "7", "\xf001", "\xf1d7"]
+
+toggleStruts :: X ()
+toggleStruts = do
+  sendMessage ToggleStruts
+  safeSpawn ".config/eww/bar/scripts/toggle" []
 
 -- And the main config
 main :: IO ()
@@ -245,8 +248,7 @@ main = do
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
         , ((controlMask, xK_Print), spawn "spectacle")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
-        , ((mod4Mask, xK_s), sendMessage $ ToggleStrut R)
-        , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
+        , ((mod4Mask .|. shiftMask, xK_s), toggleStruts)
         , ((0, 0x1008ff13), spawn "amixer -D pulse -q set Master 5000+") --XF86AudioRaiseVolume
         , ((0, 0x1008ff11), spawn "amixer -D pulse -q set Master 5000-") --XF86AudioLowerVolume
         , ((0, 0x1008ff12), spawn "amixer -D pulse -q set Master toggle") --XF86AudioMute

@@ -33,3 +33,5 @@ feh --bg-fill -z ~/Wallpapers/*
 start_if_not_running xscreensaver -no-splash &
 start_if_not_running xcompmgr &
 start_if_not_running obsidian &
+
+eww -c ~/.config/eww/bar open bar
