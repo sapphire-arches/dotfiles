@@ -84,12 +84,10 @@ floatTitleHook = composeAll $ map (\x -> title =? x --> doFloat ) floatTitles
 myManageHook = floatTitleHook <+> composeAll
     [ title =? "Defend Rome"        --> doFullFloat
     , title =? "Team Fortress 2 - OpenGL" --> doFullFloat
-    , title =? "Nightly"            --> doShift "3"
     , className =? "orage"          --> doFloat
-    , className =? "Steam"          --> doShift "9"
-    , className =? "Skype"          --> doShift "8"
+    , className =? "Steam"          --> doShift (myWorkspaces !! 5)
     , className =? "MPlayer"        --> (ask >>= doF . W.sink)
-    , className =? "obsidian"       --> doShift "7"
+    , className =? "obsidian"       --> doShift (myWorkspaces !! 6)
     , className =? "sun-awt-X11-XFramePeer" --> doIgnore
     , isFullscreen                  --> doFullFloat
     , manageDocks
@@ -219,7 +217,7 @@ barSpawner :: String -> ScreenId -> IO StatusBarConfig
 barSpawner hostname i = pure $ mySB i hostname
 
 myWorkspaces :: [String]
-myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "6", "7", "\xf001", "\xf1d7"]
+myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "\xf0296", "\xf039a", "\xf001", "\xf1d7"]
 
 toggleStruts :: X ()
 toggleStruts = do
