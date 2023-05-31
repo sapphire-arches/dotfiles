@@ -8,7 +8,7 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
-import XMonad.Util.Run(spawnPipe, safeSpawn)
+import XMonad.Util.Run(spawnPipe, safeSpawn, runProcessWithInput)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.Loggers
@@ -221,9 +221,14 @@ myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "\xf0296", "\xf039a", "\
 
 toggleStruts :: X ()
 toggleStruts = do
-  broadcastMessage ToggleStruts
+  status <- runProcessWithInput "eww" ["-c", ".config/eww/bar", "get", "visible"] ""
+  if status == "true\n" then do
+    safeSpawn "eww" ["-c", ".config/eww/bar", "update", "visible=false"]
+    broadcastMessage $ SetStruts [] [L, R]
+  else do
+    safeSpawn "eww" ["-c", ".config/eww/bar", "update", "visible=true"]
+    broadcastMessage $ SetStruts [L, R] []
   refresh
-  safeSpawn ".config/eww/bar/scripts/toggle" []
 
 -- And the main config
 main :: IO ()
