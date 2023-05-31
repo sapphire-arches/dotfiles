@@ -240,9 +240,11 @@ main = do
         , manageHook  = myManageHook <+> manageHook def
         , layoutHook  = myLayoutHook
         , modMask     = mod4Mask
-        , startupHook = do setWMName "LG3D"
-                           io $ doStartup
-                           return ()
+        , startupHook = do
+          setWMName "LG3D"
+          io $ doStartup
+          spawn "exec bash -c \"eww -c ~/.config/eww/bar kill; eww -c ~/.config/eww/bar daemon; eww -c ~/.config/eww/bar open bar-l; eww -c ~/.config/eww/bar open bar-r\""
+          return ()
         , logHook     = updatePointer (0.5, 0.5) (0.8, 0.8)
         , borderWidth = 1
         , normalBorderColor  = base03
