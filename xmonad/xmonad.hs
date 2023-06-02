@@ -218,8 +218,9 @@ mySB screen hostname = statusBarProp ("sleep 1") pps
         box cls content = concat [ "(box :class \"", cls, "\" ", content , ")" ]
         formatFocused   _ = box "window-focused" "\"\xea71\""
         formatUnfocused _ = box "window-unfocused" "\"\xeabc\""
+        formatTitle = (concatMap (\x -> if x == '"' then "\\\"" else [x])) . (take 50)
         formatFocusedWindow title = concat [
-          "(box :class \"window-title\" (label :xalign 0.5 :yalign 0.5 :angle -90 :text \"", take 50 title, "\"))"]
+          "(box :class \"window-title\" (label :xalign 0.5 :yalign 0.5 :angle -90 :text \"", formatTitle title, "\"))"]
         xmobarPPCfg = def
           { ppSep = ""
           , ppHidden = box "ws-hidden" . quote
