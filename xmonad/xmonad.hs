@@ -90,7 +90,7 @@ myManageHook = floatTitleHook <+> composeAll
     , className =? "obsidian"       --> doShift (myWorkspaces !! 6)
     , className =? "sun-awt-X11-XFramePeer" --> doIgnore
     , isFullscreen                  --> doFullFloat
-    , manageDocks
+    , checkDock                     --> doLower
     ]
 
 -------------------------------------------------------------------------------
@@ -201,6 +201,8 @@ mySB screen hostname = statusBarProp ("sleep 1") pps
         box cls content = concat [ "(box :class \"", cls, "\" ", content , ")" ]
         formatFocused   _ = box "window-focused" "\"\xea71\""
         formatUnfocused _ = box "window-unfocused" "\"\xeabc\""
+        formatFocusedWindow title = concat [
+          "(box :class \"window-title\" (label :xalign 0.5 :yalign 0.5 :angle -90 :text \"", take 50 title, "\"))"]
         xmobarPPCfg = def
           { ppSep = ""
           , ppHidden = box "ws-hidden" . quote
@@ -209,7 +211,8 @@ mySB screen hostname = statusBarProp ("sleep 1") pps
           , ppHiddenNoWindows = box "ws-hidden-no-window" . quote
           , ppLayout = box "layout-name" . quote . singleton . head
           , ppOrder = myPPOrder
-          , ppExtras = [ logTitles formatFocused formatUnfocused ]
+          , ppExtras = [ logTitles formatFocused formatUnfocused
+                       , logTitles formatFocusedWindow (\_ -> "") ]
           }
         pps = (pure xmobarPPCfg)
 
@@ -254,7 +257,7 @@ main = do
         [ ((mod4Mask, xK_z), spawn "xscreensaver-command -lock")
         , ((controlMask, xK_Print), spawn "spectacle")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
-        , ((mod4Mask .|. shiftMask, xK_s), toggleStruts)
+        , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
         , ((0, 0x1008ff13), spawn "amixer -D pulse -q set Master 5000+") --XF86AudioRaiseVolume
         , ((0, 0x1008ff11), spawn "amixer -D pulse -q set Master 5000-") --XF86AudioLowerVolume
         , ((0, 0x1008ff12), spawn "amixer -D pulse -q set Master toggle") --XF86AudioMute
