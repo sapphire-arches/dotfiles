@@ -26,14 +26,16 @@ import XMonad.Layout.SimplestFloat
 import XMonad.Operations
 import System.IO
 import System.Process
+import Data.Foldable
 import Data.IORef
 import Data.List
 import Data.Maybe
 import Data.Traversable (traverse, fmapDefault)
 import qualified XMonad.StackSet as W
+import Control.Applicative
 import Control.Monad.State.Lazy
 import Network.HostName (getHostName)
-
+import XMonad.Hooks.DebugStack
 
 ---------
 -- Colors
@@ -80,6 +82,9 @@ floatTitles = ["Fireworks", "Isometric Renderer", "Horse Race", "tile"
 
 floatTitleHook = composeAll $ map (\x -> title =? x --> doFloat ) floatTitles
 
+doSendDocks :: ManageHook
+doSendDocks = ask >>= \w -> (liftX (trace $ show w)) >> doF id
+
 -- Autofloat some special windows, put things in their place
 myManageHook = floatTitleHook <+> composeAll
     [ title =? "Defend Rome"        --> doFullFloat
@@ -89,7 +94,7 @@ myManageHook = floatTitleHook <+> composeAll
     , className =? "MPlayer"        --> (ask >>= doF . W.sink)
     , className =? "obsidian"       --> doShift (myWorkspaces !! 6)
     , className =? "sun-awt-X11-XFramePeer" --> doIgnore
-    , isFullscreen                  --> doFullFloat
+    , isFullscreen                  --> hasBorder False
     , checkDock                     --> doLower
     ]
 
@@ -147,10 +152,22 @@ runWritting fracH fracV windows nwindows (Rectangle ix iy iw ih) =
   in
      zip windows rects
 
-myLayoutHook = avoidStrutsOn [L,R,D,U] (borderlessLayouts ||| borderedLayouts)
+data RemoveFocused = RemoveFocused deriving (Read, Show)
+
+instance SetsAmbiguous RemoveFocused where
+  hiddens _ wset lr mst wrs = otherHiddens Screen `union` myHiddens
     where
-        borderlessLayouts = noBorders $ Full
-        borderedLayouts = tiled
+      otherHiddens p = hiddens p wset lr mst wrs
+      sr [] = []
+      sr [(w, r)] = [w]
+      sr (x:y:xs) = []
+      myHiddens = sr wrs
+
+myLayoutHook = avoidStrutsOn [L,R,D,U] (lessBorders amb layouts)
+    where
+        amb = RemoveFocused
+        layouts = Full
+           ||| tiled
            ||| htile
            ||| simplestFloat
            ||| OneBig (3/4) (3/4)
@@ -222,23 +239,12 @@ barSpawner hostname i = pure $ mySB i hostname
 myWorkspaces :: [String]
 myWorkspaces = ["\xf269", "\xf040", "\xf013", "4", "5", "\xf0296", "\xf039a", "\xf001", "\xf1d7"]
 
-toggleStruts :: X ()
-toggleStruts = do
-  status <- runProcessWithInput "eww" ["-c", ".config/eww/bar", "get", "visible"] ""
-  if status == "true\n" then do
-    safeSpawn "eww" ["-c", ".config/eww/bar", "update", "visible=false"]
-    broadcastMessage $ SetStruts [] [L, R]
-  else do
-    safeSpawn "eww" ["-c", ".config/eww/bar", "update", "visible=true"]
-    broadcastMessage $ SetStruts [L, R] []
-  refresh
-
 -- And the main config
 main :: IO ()
 main = do
     xmprocs <- newIORef [] :: IO (IORef [Handle])
     hostname <- getHostName
-    xmonad $ (docks . ewmh . (dynamicSBs (barSpawner hostname))) $ def
+    xmonad $ (docks . ewmh . ewmhFullscreen . (dynamicSBs (barSpawner hostname))) $ def
         { terminal    = "urxvt"
         , manageHook  = myManageHook <+> manageHook def
         , layoutHook  = myLayoutHook
@@ -249,7 +255,7 @@ main = do
           spawn "exec bash -c \"eww -c ~/.config/eww/bar kill; eww -c ~/.config/eww/bar daemon; eww -c ~/.config/eww/bar open bar-l; eww -c ~/.config/eww/bar open bar-r\""
           return ()
         , logHook     = updatePointer (0.5, 0.5) (0.8, 0.8)
-        , borderWidth = 1
+        , borderWidth = 2
         , normalBorderColor  = base03
         , focusedBorderColor = base05
         , workspaces = myWorkspaces
@@ -258,6 +264,8 @@ main = do
         , ((controlMask, xK_Print), spawn "spectacle")
 --        , ((controlMask .|. shiftMask, xK_grave), spawn "wmctrl -a $(wmctrl -l | cut -c 29-79 | awk '{print tolower($0)}'| dmenu)")
         , ((mod4Mask .|. shiftMask, xK_s), sendMessage ToggleStruts)
+        , ((mod4Mask              , xK_b), withFocused (sendMessage . ResetBorder))
+        , ((mod4Mask .|. shiftMask, xK_b), withFocused (sendMessage . (HasBorder False)))
         , ((0, 0x1008ff13), spawn "amixer -D pulse -q set Master 5000+") --XF86AudioRaiseVolume
         , ((0, 0x1008ff11), spawn "amixer -D pulse -q set Master 5000-") --XF86AudioLowerVolume
         , ((0, 0x1008ff12), spawn "amixer -D pulse -q set Master toggle") --XF86AudioMute
